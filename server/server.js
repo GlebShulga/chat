@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import express from 'express'
 import path from 'path'
 import cors from 'cors'
@@ -10,7 +11,37 @@ import cookieParser from 'cookie-parser'
 import config from './config'
 import Html from '../client/html'
 
+const { writeFile, readFile, readdir } = require('fs').promises
+
+require('colors')
+
 const { default: Root } = require('../dist/assets/js/ssr/root.bundle')
+// console.log('SSR not found. Please run "yarn run build:ssr"'.red)
+
+const templateUser = {
+  userId: '',
+  userName: '',
+  userImage: 'url',
+  hashtag: '#userName'
+}
+
+// const templateMessage = {
+//   userId: '',
+//   messageId: '',
+//   messageText: '',
+//   _createdAt: +new Date(),
+//   metaObj: {}
+// }
+
+function toWriteChannel(channelTitle, text = {}) {
+  writeFile(`${__dirname}/base/${channelTitle}.json`, JSON.stringify(text), { encoding: 'utf8' })
+}
+
+function toReadChannel(channelTitle) {
+  return readFile(`${__dirname}/base/${channelTitle}.json`, {
+    encoding: 'utf8'
+  }).then((channelObj) => JSON.parse(channelObj))
+}
 
 let connections = []
 
@@ -27,6 +58,49 @@ const middleware = [
 
 middleware.forEach((it) => server.use(it))
 
+server.post('/api/v1/channels/:channelTitle', async (req, res) => {
+  const { channelTitle } = req.params
+  const { channelDescription } = req.body
+  toWriteChannel(channelTitle, { channelTitle, channelDescription })
+  res.json({ status: 'ok' })
+})
+
+server.get('/api/v1/channelsList', async (req, res) => {
+  const channelsList = await readdir(`${__dirname}/base`).then((fileNames) =>
+    fileNames.map((it) => it.slice(0, -5))
+  )
+  res.json(channelsList)
+})
+
+server.get('/api/v1/channels/:channelTitle', async (req, res) => {
+  const { channelTitle } = req.params
+  await toReadChannel(channelTitle).then((channelObj) => res.json(channelObj))
+})
+
+server.post('/api/v1/users', async (req, res) => {
+  const { userName } = req.body
+  const { userImage } = req.body
+  const newUser = {
+    ...templateUser,
+    userId: +1,
+    userName,
+    userImage
+  }
+  const usersList = await readFile(`${__dirname}/users/users.json`, { encoding: 'utf8' })
+    .then((existingUser) => {
+      const list = [{ ...existingUser }, newUser]
+      writeFile(`${__dirname}/users/users.json`, JSON.stringify(list), {
+        encoding: 'utf8'
+      })
+    })
+    .catch(async () =>
+      writeFile(`${__dirname}/users/users.json`, JSON.stringify(newUser), {
+        encoding: 'utf8'
+      })
+    )
+  res.json(usersList)
+})
+
 server.use('/api/', (req, res) => {
   res.status(404)
   res.end()
@@ -34,7 +108,7 @@ server.use('/api/', (req, res) => {
 
 const [htmlStart, htmlEnd] = Html({
   body: 'separator',
-  title: 'Skillcrucial - Become an IT HERO'
+  title: 'Skillcrucial'
 }).split('separator')
 
 server.get('/', (req, res) => {
