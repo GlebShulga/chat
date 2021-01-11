@@ -40,7 +40,7 @@ function toWriteChannel(channelTitle, text = {}) {
 function toReadChannel(channelTitle) {
   return readFile(`${__dirname}/base/${channelTitle}.json`, {
     encoding: 'utf8'
-  }).then((channelObj) => JSON.parse(channelObj))
+  }).then((channel) => JSON.parse(channel))
 }
 
 let connections = []
@@ -67,14 +67,14 @@ server.post('/api/v1/channels/:channelTitle', async (req, res) => {
 
 server.get('/api/v1/channelsList', async (req, res) => {
   const channelsList = await readdir(`${__dirname}/base`).then((fileNames) =>
-    fileNames.map((it) => it.slice(0, -5))
+    fileNames.map((channelTitleJson) => channelTitleJson.slice(0, -5))
   )
   res.json(channelsList)
 })
 
 server.get('/api/v1/channels/:channelTitle', async (req, res) => {
   const { channelTitle } = req.params
-  await toReadChannel(channelTitle).then((channelObj) => res.json(channelObj))
+  await toReadChannel(channelTitle).then((channel) => res.json(channel))
 })
 
 server.post('/api/v1/users', async (req, res) => {
@@ -88,7 +88,7 @@ server.post('/api/v1/users', async (req, res) => {
   }
   const usersList = await readFile(`${__dirname}/users/users.json`, { encoding: 'utf8' })
     .then((existingUser) => {
-      const list = [{ ...existingUser }, newUser]
+      const list = [...existingUser, newUser]
       writeFile(`${__dirname}/users/users.json`, JSON.stringify(list), {
         encoding: 'utf8'
       })
