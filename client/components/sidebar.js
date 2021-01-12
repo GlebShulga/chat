@@ -1,16 +1,12 @@
-import React, { useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom'
-import { getChannelsList } from '../redux/reducers/channels'
+import React from 'react'
+import { useSelector } from 'react-redux'
+import { Link, useParams } from 'react-router-dom'
+
 import ButtonAddChannel from './common/buttonAddChannel'
 
 const Sidebar = () => {
   const channelsList = useSelector((s) => s.channels.listOfChannels)
-  const dispatch = useDispatch()
-  useEffect(() => {
-    dispatch(getChannelsList())
-  }, [])
-
+  const { channel: currenChannelTitle } = useParams()
   return (
     <div className="bg-purple-900 text-purple-300 w-1/5 pb-6 hidden md:block">
       <h1 className="text-white text-xl mb-2 mt-3 px-4 font-sans flex justify-between">
@@ -32,11 +28,19 @@ const Sidebar = () => {
             <ButtonAddChannel />
           </div>
         </div>
-        <div className="bg-green-500 mb-6 py-1 px-4 text-white font-semibold">
+        <div className="mb-6 py-1 px-4 text-white font-semibold">
           {channelsList.map((channelTitle) => {
-            return (
-              <div key={channelTitle} className="hover:text-red-500">
-                <Link to={`/${channelTitle}`}>{`# ${channelTitle}`}</Link>
+            return currenChannelTitle === channelTitle ? (
+              <div key={channelTitle} className="bg-green-500 py-1">
+                <div key={channelTitle} className="hover:text-gray-200">
+                  <Link to={`/${channelTitle}`}>{`# ${channelTitle}`}</Link>
+                </div>
+              </div>
+            ) : (
+              <div key={channelTitle} className="py-1">
+                <div key={channelTitle} className="hover:text-gray-400">
+                  <Link to={`/${channelTitle}`}>{`# ${channelTitle}`}</Link>
+                </div>
               </div>
             )
           })}

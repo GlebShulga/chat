@@ -25,20 +25,22 @@ const templateUser = {
   hashtag: '#userName'
 }
 
-// const templateMessage = {
-//   userId: '',
-//   messageId: '',
-//   messageText: '',
-//   _createdAt: +new Date(),
-//   metaObj: {}
-// }
+const templateMessage = {
+  userId: '',
+  messageId: '',
+  messageText: '',
+  createdAt: +new Date().toLocaleDateString(),
+  metaObj: {}
+}
 
 function toWriteChannel(channelTitle, text = {}) {
-  writeFile(`${__dirname}/base/${channelTitle}.json`, JSON.stringify(text), { encoding: 'utf8' })
+  writeFile(`${__dirname}/base/channels/${channelTitle}.json`, JSON.stringify(text), {
+    encoding: 'utf8'
+  })
 }
 
 function toReadChannel(channelTitle) {
-  return readFile(`${__dirname}/base/${channelTitle}.json`, {
+  return readFile(`${__dirname}/base/channels/${channelTitle}.json`, {
     encoding: 'utf8'
   }).then((channel) => JSON.parse(channel))
 }
@@ -66,7 +68,7 @@ server.post('/api/v1/channels/:channelTitle', async (req, res) => {
 })
 
 server.get('/api/v1/channelsList', async (req, res) => {
-  const channelsList = await readdir(`${__dirname}/base`).then((fileNames) =>
+  const channelsList = await readdir(`${__dirname}/base/channels`).then((fileNames) =>
     fileNames.map((channelTitleJson) => channelTitleJson.slice(0, -5))
   )
   res.json(channelsList)
@@ -82,23 +84,61 @@ server.post('/api/v1/users', async (req, res) => {
   const { userImage } = req.body
   const newUser = {
     ...templateUser,
-    userId: +1,
+    userId: 1,
     userName,
     userImage
   }
-  const usersList = await readFile(`${__dirname}/users/users.json`, { encoding: 'utf8' })
-    .then((existingUser) => {
-      const list = [...existingUser, newUser]
-      writeFile(`${__dirname}/users/users.json`, JSON.stringify(list), {
+  const usersList = await readFile(`${__dirname}/base/users/users.json`, { encoding: 'utf8' })
+    .then((existingUsers) => {
+      const list = [...JSON.parse(existingUsers), newUser]
+      writeFile(`${__dirname}/base/users/users.json`, JSON.stringify(list), {
         encoding: 'utf8'
       })
     })
     .catch(async () =>
-      writeFile(`${__dirname}/users/users.json`, JSON.stringify(newUser), {
+      writeFile(`${__dirname}/base/users/users.json`, JSON.stringify([newUser]), {
         encoding: 'utf8'
       })
     )
   res.json(usersList)
+})
+
+server.get('/api/v1/users', async (req, res) => {
+  readFile(`${__dirname}/base/users/users.json`, { encoding: 'utf8' }).then((user) =>
+    res.json(JSON.parse(user))
+  )
+})
+
+server.post('/api/v1/messages', async (req, res) => {
+  const { messageText } = req.body
+  const newMessage = {
+    ...templateMessage,
+    userId: 1,
+    messageId: 1,
+    messageText,
+    createdAt: new Date().toLocaleDateString()
+  }
+  const messageList = await readFile(`${__dirname}/base/messages/message.json`, {
+    encoding: 'utf8'
+  })
+    .then((existingMessages) => {
+      const list = [...JSON.parse(existingMessages), newMessage]
+      writeFile(`${__dirname}/base/messages/message.json`, JSON.stringify(list), {
+        encoding: 'utf8'
+      })
+    })
+    .catch(async () =>
+      writeFile(`${__dirname}/base/messages/message.json`, JSON.stringify([newMessage]), {
+        encoding: 'utf8'
+      })
+    )
+  res.json(messageList)
+})
+
+server.get('/api/v1/messages', (req, res) => {
+  readFile(`${__dirname}/base/messages/message.json`, { encoding: 'utf8' }).then((message) =>
+    res.json(JSON.parse(message))
+  )
 })
 
 server.use('/api/', (req, res) => {

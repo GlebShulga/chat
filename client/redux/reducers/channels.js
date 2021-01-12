@@ -31,7 +31,7 @@ export function addChannel(channelTitle, channelDescription) {
       data: { channelDescription }
     }).then(() => {
       const state = getState().channels
-      const listOfChannels = [...state.listOfChannels, { channelTitle, channelDescription }]
+      const listOfChannels = [...state.listOfChannels, channelTitle]
       dispatch({ type: ADD_CHANNEL, listOfChannels })
     })
   }

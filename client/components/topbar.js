@@ -5,7 +5,7 @@ import { getChannel } from '../redux/reducers/channels'
 
 const Topbar = () => {
   const dispatch = useDispatch()
-  const { channelTitle } = useParams()
+  const { channel: channelTitle } = useParams()
   const { channel } = useSelector((s) => s.channels)
   useEffect(() => {
     dispatch(getChannel(channelTitle))
