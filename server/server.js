@@ -27,9 +27,10 @@ const templateUser = {
 
 const templateMessage = {
   userId: '',
+  channel: '',
   messageId: '',
   messageText: '',
-  createdAt: +new Date().toLocaleDateString(),
+  createdAt: +new Date().toLocaleString(),
   metaObj: {}
 }
 
@@ -111,12 +112,15 @@ server.get('/api/v1/users', async (req, res) => {
 
 server.post('/api/v1/messages', async (req, res) => {
   const { messageText } = req.body
+  const { channel } = req.body
+  const { messageId } = req.body
   const newMessage = {
     ...templateMessage,
     userId: 1,
-    messageId: 1,
+    channel,
+    messageId,
     messageText,
-    createdAt: new Date().toLocaleDateString()
+    createdAt: new Date().toLocaleString()
   }
   const messageList = await readFile(`${__dirname}/base/messages/message.json`, {
     encoding: 'utf8'

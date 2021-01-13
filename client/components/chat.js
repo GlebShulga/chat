@@ -20,15 +20,19 @@ const Chat = () => {
     setMessageText(e.target.value)
   }
   const onClick = () => {
-    dispatch(addMessage(messageText))
+    const lastMessage = listOfMessages.find((it, index) => index === listOfMessages.length - 1)
+    const newMessageId = lastMessage.messageId + 1
+    dispatch(addMessage(messageText, currenChannelTitle, newMessageId))
   }
+
   return (
-    <div>
+    <div className="container mx-auto">
       {listOfUsers.map((user) => {
         return (
           <div key={user.userId} className="px-6 py-4 flex-1 overflow-scroll-x">
             {listOfMessages.map((message) => {
               return (
+                currenChannelTitle === message.channel &&
                 user.userId === message.userId && (
                   <div className="flex items-start mb-4">
                     <img
@@ -52,8 +56,7 @@ const Chat = () => {
           </div>
         )
       })}
-
-      <div className="flex m-6 rounded-lg border-2 border-grey overflow-hidden">
+      <div className="flex m-6 rounded-lg border-2 border-gray-200 overflow-hidden">
         <button
           type="button"
           id="btn"
