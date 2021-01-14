@@ -7,8 +7,7 @@ import { Switch, Route, Redirect, StaticRouter } from 'react-router-dom'
 
 import store, { history } from '../redux'
 
-import Channel from '../components/common/channel'
-import MainWindow from '../components/main-window'
+import MasterPage from '../components/master-page'
 import NotFound from '../components/404'
 
 import Startup from './startup'
@@ -72,9 +71,9 @@ const RootComponent = (props) => {
       <RouterSelector history={history} location={props.location} context={props.context}>
         <Startup>
           <Switch>
-            <Route exact path="/" component={() => <MainWindow />} />
-            <Route exact path="/:channel" component={() => <Channel />} />
-            <PrivateRoute exact path="/hidden-route" component={() => <MainWindow />} />
+            <Route exact path="/" component={() => <MasterPage />} />
+            <Route exact path="/:channel" component={() => <MasterPage />} />
+            <PrivateRoute exact path="/hidden-route" component={() => <MasterPage />} />
             <Route component={() => <NotFound />} />
           </Switch>
         </Startup>

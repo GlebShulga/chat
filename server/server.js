@@ -22,7 +22,7 @@ const templateUser = {
   userId: '',
   userName: '',
   userImage: 'url',
-  hashtag: '#userName'
+  hashtag: ''
 }
 
 const templateMessage = {
@@ -64,7 +64,9 @@ middleware.forEach((it) => server.use(it))
 server.post('/api/v1/channels/:channelTitle', async (req, res) => {
   const { channelTitle } = req.params
   const { channelDescription } = req.body
-  toWriteChannel(channelTitle, { channelTitle, channelDescription })
+  toWriteChannel(channelTitle, { channelTitle, channelDescription }).then(async () => {
+    await toReadChannel(channelTitle).then((channel) => res.json(channel))
+  })
   res.json({ status: 'ok' })
 })
 
@@ -82,12 +84,15 @@ server.get('/api/v1/channels/:channelTitle', async (req, res) => {
 
 server.post('/api/v1/users', async (req, res) => {
   const { userName } = req.body
-  const { userImage } = req.body
+  const { userId } = req.body
+  const { hashtag } = req.body
+  // const { userImage } = req.body
   const newUser = {
     ...templateUser,
-    userId: 1,
+    userId,
     userName,
-    userImage
+    hashtag,
+    userImage: 'photo'
   }
   const usersList = await readFile(`${__dirname}/base/users/users.json`, { encoding: 'utf8' })
     .then((existingUsers) => {
@@ -95,12 +100,14 @@ server.post('/api/v1/users', async (req, res) => {
       writeFile(`${__dirname}/base/users/users.json`, JSON.stringify(list), {
         encoding: 'utf8'
       })
+      res.json(list)
     })
-    .catch(async () =>
+    .catch(async () => {
       writeFile(`${__dirname}/base/users/users.json`, JSON.stringify([newUser]), {
         encoding: 'utf8'
       })
-    )
+      res.json([newUser])
+    })
   res.json(usersList)
 })
 
@@ -114,9 +121,10 @@ server.post('/api/v1/messages', async (req, res) => {
   const { messageText } = req.body
   const { channel } = req.body
   const { messageId } = req.body
+  const { userId } = req.body
   const newMessage = {
     ...templateMessage,
-    userId: 1,
+    userId,
     channel,
     messageId,
     messageText,
@@ -130,12 +138,14 @@ server.post('/api/v1/messages', async (req, res) => {
       writeFile(`${__dirname}/base/messages/message.json`, JSON.stringify(list), {
         encoding: 'utf8'
       })
+      res.json(list)
     })
-    .catch(async () =>
+    .catch(async () => {
       writeFile(`${__dirname}/base/messages/message.json`, JSON.stringify([newMessage]), {
         encoding: 'utf8'
       })
-    )
+      res.json([newMessage])
+    })
   res.json(messageList)
 })
 

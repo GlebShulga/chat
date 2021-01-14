@@ -18,6 +18,18 @@ export default (state = initialState, action) => {
   }
 }
 
+export function addUser(userId, userName, hashtag) {
+  return (dispatch) => {
+    axios({
+      method: 'post',
+      url: `/api/v1/users`,
+      data: { userId, userName, hashtag }
+    }).then(({ data: listOfUsers }) => {
+      dispatch({ type: ADD_USER, listOfUsers })
+    })
+  }
+}
+
 export function getUsers() {
   return (dispatch) => {
     axios('/api/v1/users')

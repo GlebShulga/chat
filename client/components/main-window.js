@@ -1,16 +1,10 @@
-import React, { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
-import { getChannelsList } from '../redux/reducers/channels'
+import React from 'react'
 import Head from './head'
 import Sidebar from './sidebar'
 import Chat from './chat'
 // import Topbar from './topbar'
 
 const MainWindow = () => {
-  const dispatch = useDispatch()
-  useEffect(() => {
-    dispatch(getChannelsList())
-  }, [])
   return (
     <div>
       <Head title="Chat" />

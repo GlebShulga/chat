@@ -1,11 +1,15 @@
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import Head from '../head'
 import { addChannel } from '../../redux/reducers/channels'
 
 const AddChannel = (props) => {
+  const history = useHistory()
+  const listOfChannels = useSelector((s) => s.channels.listOfChannels)
   const [channelTitle, setChannelTitle] = useState()
   const [channelDescription, setChannelDescription] = useState()
+  const [channelAlreadyExist, setChannelAlreadyExist] = useState(false)
   const dispatch = useDispatch()
   const onChangeTitle = (e) => {
     setChannelTitle(e.target.value)
@@ -14,21 +18,42 @@ const AddChannel = (props) => {
     setChannelDescription(e.target.value)
   }
   const onClick = () => {
-    dispatch(addChannel(channelTitle, channelDescription))
-    props.setToggle(false)
+    if (listOfChannels.indexOf(channelTitle) === -1) {
+      dispatch(addChannel(channelTitle, channelDescription))
+      history.push(`/${channelTitle}`)
+      props.setToggle(false)
+      setChannelAlreadyExist(false)
+    }
+    setChannelAlreadyExist(true)
   }
 
   return (
-    <div>
+    <div сlassName="opacity-100">
       <Head title="Add Channel" />
       <div className="grid grid-col-1 gap-2">
-        <input
-          className="border border-gray-300 text-gray-600 rounded-lg p-2"
-          type="text"
-          placeholder="Type new channel's name"
-          value={channelTitle}
-          onChange={onChangeTitle}
-        />
+        {!channelAlreadyExist && (
+          <input
+            className="border border-gray-300 text-gray-600 rounded-lg p-2"
+            type="text"
+            placeholder="Type new channel's name"
+            value={channelTitle}
+            onChange={onChangeTitle}
+          />
+        )}
+        {channelAlreadyExist && (
+          <div>
+            <input
+              className="border-4 border-red-600 text-gray-600 rounded-lg p-2"
+              type="text"
+              placeholder="Type new channel's name"
+              value={channelTitle}
+              onChange={onChangeTitle}
+            />
+            <div className="text-red-500 font-semibold flex justify-center text-lg pt-1">
+              Channel`s name already exist
+            </div>
+          </div>
+        )}
         <input
           className="border border-gray-300 text-gray-600 rounded-lg p-2"
           type="text"

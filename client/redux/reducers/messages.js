@@ -18,12 +18,12 @@ export default (state = initialState, action) => {
   }
 }
 
-export function addMessage(messageText, channel, messageId) {
+export function addMessage(messageText, channel, messageId, userId) {
   return (dispatch) => {
     axios({
       method: 'post',
       url: `/api/v1/messages`,
-      data: { messageText, channel, messageId }
+      data: { messageText, channel, messageId, userId }
     }).then(({ data: listOfMessages }) => {
       dispatch({ type: ADD_MESSAGE, listOfMessages })
     })

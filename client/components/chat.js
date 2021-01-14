@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import { addMessage, getMessages } from '../redux/reducers/messages'
-import { getUsers } from '../redux/reducers/users'
+import { addMessage } from '../redux/reducers/messages'
 
 const Chat = () => {
   const listOfMessages = useSelector((s) => s.messages.listOfMessages)
@@ -10,23 +9,18 @@ const Chat = () => {
   const dispatch = useDispatch()
   const { channel: currenChannelTitle } = useParams()
 
-  useEffect(() => {
-    dispatch(getMessages())
-    dispatch(getUsers())
-  }, [currenChannelTitle, dispatch])
-
   const [messageText, setMessageText] = useState()
   const onChange = (e) => {
     setMessageText(e.target.value)
   }
   const onClick = () => {
-    const lastMessage = listOfMessages.find((it, index) => index === listOfMessages.length - 1)
+    const lastMessage = listOfMessages[listOfMessages.length - 1]
     const newMessageId = lastMessage.messageId + 1
     dispatch(addMessage(messageText, currenChannelTitle, newMessageId))
   }
 
   return (
-    <div className="container mx-auto">
+    <div>
       {listOfUsers.map((user) => {
         return (
           <div key={user.userId} className="px-6 py-4 flex-1 overflow-scroll-x">
