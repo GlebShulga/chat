@@ -14,9 +14,10 @@ const Chat = () => {
     setMessageText(e.target.value)
   }
   const onClick = () => {
+    const lastUserId = listOfUsers[listOfUsers.length - 1].userId // в случае если добавили нового пользователя
     const lastMessage = listOfMessages[listOfMessages.length - 1]
     const newMessageId = lastMessage.messageId + 1
-    dispatch(addMessage(messageText, currenChannelTitle, newMessageId))
+    dispatch(addMessage(messageText, currenChannelTitle, newMessageId, lastUserId))
   }
 
   return (

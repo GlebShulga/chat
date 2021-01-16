@@ -13,7 +13,10 @@ const UserRegistration = () => {
   const onChange = (e) => {
     setUserName(e.target.value)
   }
-  console.log(listOfUsers.find((user) => user.userName === userName))
+
+  const onClickExistingUser = () => {
+    history.push('/main')
+  }
 
   const onClick = () => {
     if (listOfUsers.find((user) => user.userName === userName)) {
@@ -75,6 +78,9 @@ const UserRegistration = () => {
                 <div className="text-red-500 font-semibold flex justify-center text-lg pt-1">
                   User already exist
                 </div>
+                <div className="text-gray-700 font-semibold flex justify-center text-3xl pt-1">
+                  Is it you?
+                </div>
               </div>
             )}
             {/* <!-- Password Input --> */}
@@ -98,15 +104,39 @@ const UserRegistration = () => {
               disabled="disabled" // delete after adding Authorization
             />
             {/* <!-- Auth Buttton --> */}
-            <button
-              type="button"
-              className="w-full py-3 mt-10 bg-gray-800 rounded-sm
+            {!userAlreadyExist && (
+              <button
+                type="button"
+                className="w-full py-3 mt-10 bg-gray-800 rounded-sm
                     font-medium text-white uppercase
                     focus:outline-none hover:bg-gray-700 hover:shadow-none"
-              onClick={onClick}
-            >
-              Login
-            </button>
+                onClick={onClick}
+              >
+                Login
+              </button>
+            )}
+            {userAlreadyExist && (
+              <div className="flex justify-around">
+                <button
+                  type="button"
+                  className="w-1/3 py-3 mt-10 bg-gray-800 rounded-sm
+                    font-medium text-white uppercase
+                    focus:outline-none hover:bg-gray-700 hover:shadow-none"
+                  onClick={setUserAlreadyExist(false)}
+                >
+                  No
+                </button>
+                <button
+                  type="button"
+                  className="w-1/3 py-3 mt-10 bg-gray-800 rounded-sm px-1
+                    font-medium text-white uppercase
+                    focus:outline-none hover:bg-gray-700 hover:shadow-none"
+                  onClick={onClickExistingUser}
+                >
+                  Yes
+                </button>
+              </div>
+            )}
             {/* <!-- Another Auth Routes --> */}
             <div className="sm:flex sm:flex-wrap mt-8 sm:mb-4 text-sm text-center">
               <a href="forgot-password" className="flex-2 underline">
