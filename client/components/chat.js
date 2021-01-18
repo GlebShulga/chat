@@ -6,6 +6,9 @@ import { addMessage } from '../redux/reducers/messages'
 const Chat = () => {
   const listOfMessages = useSelector((s) => s.messages.listOfMessages)
   const listOfUsers = useSelector((s) => s.users.listOfUsers)
+  console.log(listOfUsers)
+  const currentUserName = useSelector((s) => s.users.currentUserName)
+  console.log(currentUserName)
   const dispatch = useDispatch()
   const { channel: currenChannelTitle } = useParams()
 
@@ -14,10 +17,15 @@ const Chat = () => {
     setMessageText(e.target.value)
   }
   const onClick = () => {
-    const lastUserId = listOfUsers[listOfUsers.length - 1].userId // в случае если добавили нового пользователя
+    const currentUserId = listOfUsers.reduce((acc, rec) => {
+      if (rec.userName === currentUserName) {
+        return rec.userId
+      }
+      return acc
+    }, '')
     const lastMessage = listOfMessages[listOfMessages.length - 1]
     const newMessageId = lastMessage.messageId + 1
-    dispatch(addMessage(messageText, currenChannelTitle, newMessageId, lastUserId))
+    dispatch(addMessage(messageText, currenChannelTitle, newMessageId, currentUserId))
   }
 
   return (

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { addUser } from '../redux/reducers/users'
+import { addUser, setCurrentUser } from '../redux/reducers/users'
 
 const UserRegistration = () => {
   const listOfUsers = useSelector((s) => s.users.listOfUsers)
@@ -15,17 +15,19 @@ const UserRegistration = () => {
   }
 
   const onClickExistingUser = () => {
+    dispatch(setCurrentUser(userName))
     history.push('/main')
   }
 
-  const onClick = () => {
+  const onClick = async () => {
     if (listOfUsers.find((user) => user.userName === userName)) {
       setUserAlreadyExist(true)
     } else {
       const lastUser = listOfUsers[listOfUsers.length - 1]
       const newUserId = lastUser.userId + 1
       const hashtag = `#${userName}`
-      dispatch(addUser(newUserId, userName, hashtag))
+      await dispatch(addUser(newUserId, userName, hashtag))
+      dispatch(setCurrentUser(userName))
       history.push('/main')
       setUserAlreadyExist(false)
     }
@@ -122,7 +124,7 @@ const UserRegistration = () => {
                   className="w-1/3 py-3 mt-10 bg-gray-800 rounded-sm
                     font-medium text-white uppercase
                     focus:outline-none hover:bg-gray-700 hover:shadow-none"
-                  onClick={setUserAlreadyExist(false)}
+                  onClick={() => setUserAlreadyExist(false)}
                 >
                   No
                 </button>
