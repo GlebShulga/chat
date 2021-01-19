@@ -19,15 +19,14 @@ const UserRegistration = () => {
     history.push('/main')
   }
 
-  const onClick = async () => {
+  const onClick = () => {
     if (listOfUsers.find((user) => user.userName === userName)) {
       setUserAlreadyExist(true)
     } else {
       const lastUser = listOfUsers[listOfUsers.length - 1]
       const newUserId = lastUser.userId + 1
       const hashtag = `#${userName}`
-      await dispatch(addUser(newUserId, userName, hashtag))
-      dispatch(setCurrentUser(userName))
+      dispatch(addUser(newUserId, userName, hashtag))
       history.push('/main')
       setUserAlreadyExist(false)
     }

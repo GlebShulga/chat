@@ -6,9 +6,7 @@ import { addMessage } from '../redux/reducers/messages'
 const Chat = () => {
   const listOfMessages = useSelector((s) => s.messages.listOfMessages)
   const listOfUsers = useSelector((s) => s.users.listOfUsers)
-  console.log(listOfUsers)
   const currentUserName = useSelector((s) => s.users.currentUserName)
-  console.log(currentUserName)
   const dispatch = useDispatch()
   const { channel: currenChannelTitle } = useParams()
 
