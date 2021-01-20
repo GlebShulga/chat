@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
+import SubscriptionOnChannel from './showChannels'
 
 const ButtonShowChannels = () => {
-  const [toggle, setToggle] = useState(false)
+  const [position, setPosition] = useState(false)
 
   useEffect(() => {
     const btn = document.querySelector('#btn')
@@ -41,7 +42,7 @@ const ButtonShowChannels = () => {
         type="button"
         id="btn"
         className="p-0 w-8 h-8 bg-purple-600 rounded-full hover:bg-green-500 active:shadow-lg mouse shadow transition ease-in duration-200 focus:outline-none"
-        onClick={() => setToggle(!toggle)}
+        onClick={() => setPosition(!position)}
       >
         <svg
           className="text-white w-6 h-6 mx-1"
@@ -58,9 +59,9 @@ const ButtonShowChannels = () => {
           />
         </svg>
       </button>
-      {toggle && (
+      {position && (
         <div className="absolute w-screen h-screen bg-gray-700 opacity-80 top-0 left-0 flex items-center justify-center">
-          {/* <AddChannel setToggle={setToggle} /> */}
+          <SubscriptionOnChannel setPosition={setPosition} />
         </div>
       )}
     </div>

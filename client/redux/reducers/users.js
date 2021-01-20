@@ -80,3 +80,19 @@ export function subscriptionOnChannel(userId, subscriptionOnChannels) {
     })
   }
 }
+
+// export function unsubscriptionOnChannel(userId, subscriptionOnChannels) {
+//   return (dispatch, getState) => {
+//     const store = getState()
+//     const { listOfUsers } = store.users
+//     const updateUserSubscriptions = listOfUsers.map((user) =>
+//       user.userId === +userId ? { ...user, subscriptionOnChannels } : user
+//     )
+//     dispatch({ type: SUBSCRIPTION_ON_CHANNEL, listOfUsers: updateUserSubscriptions })
+//     axios({
+//       method: 'patch',
+//       url: `/api/v1/users/${userId}`,
+//       data: { subscriptionOnChannels }
+//     })
+//   }
+// }

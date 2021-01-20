@@ -27,7 +27,7 @@ const Sidebar = () => {
       <div>
         <div className="flex justify-between py-3">
           <div className="px-4 py-1 mb-2 font-sans">Channels</div>
-          <div className="flex justify-between px-3">
+          <div className="flex justify-between flex-wrap px-3">
             <div className="px-1">
               <ButtonShowChannels />
             </div>

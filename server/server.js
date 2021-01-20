@@ -118,8 +118,8 @@ server.get('/api/v1/users', async (req, res) => {
   )
 })
 
-server.patch('/api/v1/users/:userId', async (req, res) => {
-  const { userId } = req.params
+server.patch('/api/v1/users', async (req, res) => {
+  const { userId } = req.body
   const { subscriptionOnChannels } = req.body
   const updatedUserSubscriptions = await readFile(`${__dirname}/base/users/users.json`, {
     encoding: 'utf8'
@@ -139,26 +139,31 @@ server.patch('/api/v1/users/:userId', async (req, res) => {
   res.json(updatedUserSubscriptions)
 })
 
-server.delete('/api/v1/users/:userId', async (req, res) => {
-  const { userId } = req.params
-  const { subscriptionOnChannels } = req.body
-  const updatedUserSubscriptions = await readFile(`${__dirname}/base/users/users.json`, {
-    encoding: 'utf8'
-  })
-    .then((listOfUsers) => {
-      return JSON.parse(listOfUsers).map((user) =>
-        user.userId === +userId ? { ...user, subscriptionOnChannels } : user
-      )
-    })
-    .catch(() => {
-      res.status(404)
-      res.end()
-    })
-  writeFile(`${__dirname}/base/users/users.json`, JSON.stringify(updatedUserSubscriptions), {
-    encoding: 'utf8'
-  })
-  res.json(updatedUserSubscriptions)
-})
+// server.delete('/api/v1/users/:userId', async (req, res) => {
+//   const { userId } = req.params
+//   const { subscriptionOnChannels } = req.body
+//   const updatedUserSubscriptions = await readFile(`${__dirname}/base/users/users.json`, {
+//     encoding: 'utf8'
+//   })
+//     .then((listOfUsers) => {
+//       return JSON.parse(listOfUsers).map((user) => {
+//         const index = user.subscriptionOnChannels(subscriptionOnChannels)
+//         console.log(index)
+//         if (user.userId === +userId) {
+//           return { ...user, subscriptionOnChannels }
+//         }
+//         return user
+//       })
+//     })
+//     .catch(() => {
+//       res.status(404)
+//       res.end()
+//     })
+//   writeFile(`${__dirname}/base/users/users.json`, JSON.stringify(updatedUserSubscriptions), {
+//     encoding: 'utf8'
+//   })
+//   res.json(updatedUserSubscriptions)
+// })
 
 server.post('/api/v1/messages', async (req, res) => {
   const { messageText } = req.body
