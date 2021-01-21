@@ -5,8 +5,8 @@ const ButtonShowChannels = () => {
   const [position, setPosition] = useState(false)
 
   useEffect(() => {
-    const btn = document.querySelector('#btn')
-    const tooltip = document.querySelector('#tooltip')
+    const btn = document.querySelector('#btnShow')
+    const tooltip = document.querySelector('#tooltipShow')
 
     btn.addEventListener('mouseenter', () => {
       tooltip.classList.remove('hidden')
@@ -25,7 +25,7 @@ const ButtonShowChannels = () => {
     <div>
       <div className="absolute mb-10 ml-10">
         <div
-          id="tooltip"
+          id="tooltipShow"
           className="bg-black text-white text-xs font-bold rounded py-1 px-4 right-0 bottom-full hidden"
         >
           Show public channels
@@ -40,7 +40,7 @@ const ButtonShowChannels = () => {
       </div>
       <button
         type="button"
-        id="btn"
+        id="btnShow"
         className="p-0 w-8 h-8 bg-purple-600 rounded-full hover:bg-green-500 active:shadow-lg mouse shadow transition ease-in duration-200 focus:outline-none"
         onClick={() => setPosition(!position)}
       >

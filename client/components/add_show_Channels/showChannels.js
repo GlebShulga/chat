@@ -2,7 +2,7 @@ import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import Head from '../head'
-import { subscriptionOnChannel } from '../../redux/reducers/users'
+import { subscriptionOnChannel, unsubscriptionOnChannel } from '../../redux/reducers/users'
 
 const SubscriptionOnChannel = (props) => {
   const history = useHistory()
@@ -12,23 +12,26 @@ const SubscriptionOnChannel = (props) => {
 
   const dispatch = useDispatch()
 
-  // const subscriptionOnClick = () => {
-  //   const userId = listOfUsers.reduce(
-  //     (acc, rec) => (rec.userName === currentUserName ? rec.userId : acc),
-  //     ''
-  //   )
-  //   dispatch(subscriptionOnChannel(userId, channelTitle))
-  //   history.push(`/${channelTitle}`)
-  //   props.setPosition(false)
-  // }
+  const subscriptionOnClick = (channelTitle) => {
+    const userId = listOfUsers.reduce(
+      (acc, rec) => (rec.userName === currentUserName ? rec.userId : acc),
+      ''
+    )
+    dispatch(subscriptionOnChannel(userId, channelTitle))
+    history.push(`/${channelTitle}`)
+    props.setPosition(false)
+  }
 
-  // const unsubscriptionOnClick = () => {
-  //   dispatch(unsubscriptionOnChannel(userId, channelTitle))
-  // }
+  const unsubscriptionOnClick = (channelTitle) => {
+    const userId = listOfUsers.reduce(
+      (acc, rec) => (rec.userName === currentUserName ? rec.userId : acc),
+      ''
+    )
+    dispatch(unsubscriptionOnChannel(userId, channelTitle))
+  }
+
   const activeButton =
     'bg-transparent hover:bg-grey text-grey-dark font-semibold hover:text-white py-2 px-4 border border-grey hover:border-transparent rounded mr-2'
-  const disabledButton =
-    'bg-transparent hover:bg-grey text-grey-dark font-semibold hover:text-white py-2 px-4 border border-grey hover:border-transparent rounded mr-2 cursor-not-allowed'
   return (
     <div сlassName="opacity-100">
       <Head title="Channel's list" />
@@ -41,33 +44,21 @@ const SubscriptionOnChannel = (props) => {
             const subscriptionsOfCurrentUser = listOfUsers.reduce((acc, rec) => {
               return rec.userName === currentUserName ? rec.subscriptionOnChannels : acc
             }, [])
-            return subscriptionsOfCurrentUser.map((subscribedChannel) =>
-              subscribedChannel === channelTitle ? (
-                <div className="flex flex-row p-4 grid justify-items-center">
+            return subscriptionsOfCurrentUser.map((subscribedChannel) => {
+              const isButtonDisable = subscribedChannel !== channelTitle
+              return (
+                <div key="buttons" className="flex flex-row p-4 grid justify-items-center">
                   <div className="text-gray-200 text-2xl font-bold">{channelTitle}</div>
                   <div className="flex flex-row">
                     <div className="p-2">
                       <button
                         type="button"
                         className={activeButton}
-                        // onClick={unsubscriptionOnClick}
+                        onClick={() => {
+                          unsubscriptionOnClick(channelTitle)
+                        }}
+                        disabled={isButtonDisable}
                       >
-                        Unsubscribe
-                      </button>
-                    </div>
-                    <div className="p-2">
-                      <button type="button" className={disabledButton} disabled="disabled">
-                        Subscribe
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="flex flex-row p-1 grid justify-items-center">
-                  <div className="text-gray-200 text-2xl font-bold">{channelTitle}</div>
-                  <div className="flex flex-row">
-                    <div className="p-2">
-                      <button type="button" className={disabledButton} disabled="disabled">
                         Unsubscribe
                       </button>
                     </div>
@@ -76,14 +67,9 @@ const SubscriptionOnChannel = (props) => {
                         type="button"
                         className={activeButton}
                         onClick={() => {
-                          const userId = listOfUsers.reduce(
-                            (acc, rec) => (rec.userName === currentUserName ? rec.userId : acc),
-                            ''
-                          )
-                          dispatch(subscriptionOnChannel(userId, channelTitle))
-                          history.push(`/${channelTitle}`)
-                          props.setPosition(false)
+                          subscriptionOnClick(channelTitle)
                         }}
+                        disabled={isButtonDisable}
                       >
                         Subscribe
                       </button>
@@ -91,19 +77,20 @@ const SubscriptionOnChannel = (props) => {
                   </div>
                 </div>
               )
-            )
+            })
           })}
-        </div>
-        <div className="pt-4">
-          <button
-            type="button"
-            className="px-7 py-2 rounded-full bg-gray-300 text-gray-600 max-w-max shadow-sm hover:bg-gray-300"
-            onClick={() => {
-              props.setPosition(false)
-            }}
-          >
-            Cancel
-          </button>
+
+          <div className="pt-4">
+            <button
+              type="button"
+              className="px-7 py-2 rounded-full bg-gray-300 text-gray-600 max-w-max shadow-sm hover:bg-gray-300"
+              onClick={() => {
+                props.setPosition(false)
+              }}
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       </div>
     </div>

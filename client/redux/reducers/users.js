@@ -69,30 +69,44 @@ export function subscriptionOnChannel(userId, subscriptionOnChannels) {
   return (dispatch, getState) => {
     const store = getState()
     const { listOfUsers } = store.users
-    const updateUserSubscriptions = listOfUsers.map((user) =>
-      user.userId === +userId ? { ...user, subscriptionOnChannels } : user
+    const newUserSubscriptions = listOfUsers.map((user) =>
+      user.userId === +userId
+        ? {
+            ...user,
+            subscriptionOnChannels: [...user.subscriptionOnChannels, subscriptionOnChannels]
+          }
+        : user
     )
-    dispatch({ type: SUBSCRIPTION_ON_CHANNEL, listOfUsers: updateUserSubscriptions })
+    dispatch({ type: SUBSCRIPTION_ON_CHANNEL, listOfUsers: newUserSubscriptions })
     axios({
       method: 'patch',
-      url: `/api/v1/users/${userId}`,
-      data: { subscriptionOnChannels }
+      url: '/api/v1/users',
+      data: { userId, subscriptionOnChannels }
     })
   }
 }
 
-// export function unsubscriptionOnChannel(userId, subscriptionOnChannels) {
-//   return (dispatch, getState) => {
-//     const store = getState()
-//     const { listOfUsers } = store.users
-//     const updateUserSubscriptions = listOfUsers.map((user) =>
-//       user.userId === +userId ? { ...user, subscriptionOnChannels } : user
-//     )
-//     dispatch({ type: SUBSCRIPTION_ON_CHANNEL, listOfUsers: updateUserSubscriptions })
-//     axios({
-//       method: 'patch',
-//       url: `/api/v1/users/${userId}`,
-//       data: { subscriptionOnChannels }
-//     })
-//   }
-// }
+export function unsubscriptionOnChannel(userId, subscriptionOnChannels) {
+  return (dispatch, getState) => {
+    const store = getState()
+    const { listOfUsers } = store.users
+    const delUserSubscriptions = listOfUsers.map((user) => {
+      if (user.userId === +userId) {
+        const filteredSubscriptions = user.subscriptionOnChannels.filter(
+          (subscription) => subscription !== subscriptionOnChannels
+        )
+        return {
+          ...user,
+          subscriptionOnChannels: filteredSubscriptions
+        }
+      }
+      return user
+    })
+    dispatch({ type: SUBSCRIPTION_ON_CHANNEL, listOfUsers: delUserSubscriptions })
+    axios({
+      method: 'patch',
+      url: '/api/v1/users',
+      data: { userId, subscriptionOnChannels }
+    })
+  }
+}

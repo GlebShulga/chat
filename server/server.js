@@ -31,7 +31,7 @@ const templateMessage = {
   channel: '',
   messageId: '',
   messageText: '',
-  createdAt: +new Date().toLocaleString(),
+  createdAt: +new Date(),
   metaObj: {}
 }
 
@@ -126,7 +126,12 @@ server.patch('/api/v1/users', async (req, res) => {
   })
     .then((listOfUsers) => {
       return JSON.parse(listOfUsers).map((user) =>
-        user.userId === +userId ? { ...user, subscriptionOnChannels } : user
+        user.userId === +userId
+          ? {
+              ...user,
+              subscriptionOnChannels: [...user.subscriptionOnChannels, subscriptionOnChannels]
+            }
+          : user
       )
     })
     .catch(() => {
@@ -139,31 +144,35 @@ server.patch('/api/v1/users', async (req, res) => {
   res.json(updatedUserSubscriptions)
 })
 
-// server.delete('/api/v1/users/:userId', async (req, res) => {
-//   const { userId } = req.params
-//   const { subscriptionOnChannels } = req.body
-//   const updatedUserSubscriptions = await readFile(`${__dirname}/base/users/users.json`, {
-//     encoding: 'utf8'
-//   })
-//     .then((listOfUsers) => {
-//       return JSON.parse(listOfUsers).map((user) => {
-//         const index = user.subscriptionOnChannels(subscriptionOnChannels)
-//         console.log(index)
-//         if (user.userId === +userId) {
-//           return { ...user, subscriptionOnChannels }
-//         }
-//         return user
-//       })
-//     })
-//     .catch(() => {
-//       res.status(404)
-//       res.end()
-//     })
-//   writeFile(`${__dirname}/base/users/users.json`, JSON.stringify(updatedUserSubscriptions), {
-//     encoding: 'utf8'
-//   })
-//   res.json(updatedUserSubscriptions)
-// })
+server.delete('/api/v1/users', async (req, res) => {
+  const { userId } = req.body
+  const { subscriptionOnChannels } = req.body
+  const updatedUserSubscriptions = await readFile(`${__dirname}/base/users/users.json`, {
+    encoding: 'utf8'
+  })
+    .then((listOfUsers) => {
+      return JSON.parse(listOfUsers).map((user) => {
+        if (user.userId === +userId) {
+          const filteredSubscriptions = user.subscriptionOnChannels.filter(
+            (subscription) => subscription !== subscriptionOnChannels
+          )
+          return {
+            ...user,
+            subscriptionOnChannels: filteredSubscriptions
+          }
+        }
+        return user
+      })
+    })
+    .catch(() => {
+      res.status(404)
+      res.end()
+    })
+  writeFile(`${__dirname}/base/users/users.json`, JSON.stringify(updatedUserSubscriptions), {
+    encoding: 'utf8'
+  })
+  res.json(updatedUserSubscriptions)
+})
 
 server.post('/api/v1/messages', async (req, res) => {
   const { messageText } = req.body
@@ -176,7 +185,7 @@ server.post('/api/v1/messages', async (req, res) => {
     channel,
     messageId,
     messageText,
-    createdAt: new Date().toLocaleString()
+    createdAt: +new Date()
   }
   const messageList = await readFile(`${__dirname}/base/messages/message.json`, {
     encoding: 'utf8'

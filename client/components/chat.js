@@ -31,29 +31,32 @@ const Chat = () => {
       {listOfUsers.map((user) => {
         return (
           <div key={user.userId} className="px-6 py-4 flex-1 overflow-scroll-x">
-            {listOfMessages.map((message) => {
-              return (
-                currenChannelTitle === message.channel &&
-                user.userId === message.userId && (
-                  <div className="flex items-start mb-4">
-                    <img
-                      src="https://i.imgur.com/qACoKgY.jpg"
-                      alt="men"
-                      className="w-10 h-10 rounded mr-3"
-                    />
-                    <div key={message.messageId} className="flex flex-col">
-                      <div className="flex items-end">
-                        <span className="font-bold text-md mr-2 font-sans">{user.userName}</span>
-                        <span className="text-grey text-xs font-light">{message.createdAt}</span>
+            {listOfMessages
+              .sort((a, b) => a.createdAt - b.createdAt)
+              .map((message) => {
+                const correctTime = new Date(message.createdAt).toLocaleString()
+                return (
+                  currenChannelTitle === message.channel &&
+                  user.userId === message.userId && (
+                    <div className="flex items-start mb-4">
+                      <img
+                        src="https://i.imgur.com/qACoKgY.jpg"
+                        alt="men"
+                        className="w-10 h-10 rounded mr-3"
+                      />
+                      <div key={message.messageId} className="flex flex-col">
+                        <div className="flex items-end">
+                          <span className="font-bold text-md mr-2 font-sans">{user.userName}</span>
+                          <span className="text-grey text-xs font-light">{correctTime}</span>
+                        </div>
+                        <p className="font-light text-md text-grey-darkest pt-1">
+                          <div>{message.messageText}</div>
+                        </p>
                       </div>
-                      <p className="font-light text-md text-grey-darkest pt-1">
-                        <div>{message.messageText}</div>
-                      </p>
                     </div>
-                  </div>
+                  )
                 )
-              )
-            })}
+              })}
           </div>
         )
       })}
