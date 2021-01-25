@@ -1,7 +1,7 @@
-MERN Chat
+# MERN Chat
 Slack/Discord clone application.
 
-How to use it?
+## How to use it?
 Install modules
 
 npm install
