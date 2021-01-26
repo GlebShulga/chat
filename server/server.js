@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import express from 'express'
 import path from 'path'
 import cors from 'cors'
@@ -8,8 +7,19 @@ import { renderToStaticNodeStream } from 'react-dom/server'
 import React from 'react'
 
 import cookieParser from 'cookie-parser'
+import passport from 'passport'
+import jwt from 'jsonwebtoken'
+
+import mongooseService from './services/mongoose'
+import passportJWT from './services/passport'
+import auth from './middleware/auth'
+
 import config from './config'
 import Html from '../client/html'
+
+import User from './model/User.model'
+
+mongooseService.connect()
 
 const { writeFile, readFile, readdir } = require('fs').promises
 
@@ -21,6 +31,7 @@ const { default: Root } = require('../dist/assets/js/ssr/root.bundle')
 const templateUser = {
   userId: '',
   userName: '',
+  password: '',
   userImage: 'url',
   hashtag: '',
   subscriptionOnChannels: []
@@ -54,13 +65,55 @@ const server = express()
 
 const middleware = [
   cors(),
+  passport.initialize(),
   express.static(path.resolve(__dirname, '../dist/assets')),
   bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }),
   bodyParser.json({ limit: '50mb', extended: true }),
   cookieParser()
 ]
+passport.use('jwt', passportJWT.jwt)
 
 middleware.forEach((it) => server.use(it))
+
+server.get('/api/v1/user-info', auth([]), (req, res) => {
+  res.json({ status: '123' })
+})
+
+server.get('/api/v1/test/cookies', (req, res) => {
+  res.cookie('serverCookie', 'test', { maxAge: 90000, httpOnly: true })
+  res.json({ status: res.cookies })
+})
+
+server.get('/api/v1/auth', async (req, res) => {
+  try {
+    const jwtUser = jwt.verify(req.cookies.token, config.secret)
+    const user = await User.findById(jwtUser.uid)
+
+    const payload = { uid: user.id }
+    const token = jwt.sign(payload, config.secret, { expiresIn: '48h' })
+    delete user.password
+    res.cookie('token', token, { maxAge: 1000 * 60 * 60 * 48 })
+    res.json({ status: 'ok', token, user })
+  } catch (err) {
+    console.log(err)
+    res.json({ status: 'error', err })
+  }
+})
+
+server.post('/api/v1/auth', async (req, res) => {
+  console.log(req.body)
+  try {
+    const user = await User.findAndValidateUser(req.body)
+    const payload = { uid: user.id }
+    const token = jwt.sign(payload, config.secret, { expiresIn: '48h' })
+    delete user.password
+    res.cookie('token', token, { maxAge: 1000 * 60 * 60 * 48 })
+    res.json({ status: 'ok', token, user })
+  } catch (err) {
+    console.log(err)
+    res.json({ status: 'error', err })
+  }
+})
 
 server.post('/api/v1/channels/:channelTitle', async (req, res) => {
   const { channelTitle } = req.params
@@ -86,30 +139,35 @@ server.get('/api/v1/channels/:channelTitle', async (req, res) => {
 server.post('/api/v1/users', async (req, res) => {
   const { userName } = req.body
   const { userId } = req.body
+  const { password } = req.password
   const { hashtag } = req.body
   // const { userImage } = req.body
-  const newUser = {
+  const user = new User({
     ...templateUser,
     userId,
     userName,
+    password,
     hashtag,
     userImage: 'photo'
-  }
-  const usersList = await readFile(`${__dirname}/base/users/users.json`, { encoding: 'utf8' })
-    .then((existingUsers) => {
-      const list = [...JSON.parse(existingUsers), newUser]
-      writeFile(`${__dirname}/base/users/users.json`, JSON.stringify(list), {
-        encoding: 'utf8'
-      })
-      res.json(list)
-    })
-    .catch(async () => {
-      writeFile(`${__dirname}/base/users/users.json`, JSON.stringify([newUser]), {
-        encoding: 'utf8'
-      })
-      res.json([newUser])
-    })
-  res.json(usersList)
+  })
+  user.save()
+  console.log(`User ${userName} added`)
+  res.json({ status: 'ok' })
+  //   const usersList = await readFile(`${__dirname}/base/users/users.json`, { encoding: 'utf8' })
+  //     .then((existingUsers) => {
+  //       const list = [...JSON.parse(existingUsers), newUser]
+  //       writeFile(`${__dirname}/base/users/users.json`, JSON.stringify(list), {
+  //         encoding: 'utf8'
+  //       })
+  //       res.json(list)
+  //     })
+  //     .catch(async () => {
+  //       writeFile(`${__dirname}/base/users/users.json`, JSON.stringify([newUser]), {
+  //         encoding: 'utf8'
+  //       })
+  //       res.json([newUser])
+  //     })
+  //   res.json(usersList)
 })
 
 server.get('/api/v1/users', async (req, res) => {

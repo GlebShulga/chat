@@ -44,43 +44,43 @@ const SubscriptionOnChannel = (props) => {
             const subscriptionsOfCurrentUser = listOfUsers.reduce((acc, rec) => {
               return rec.userName === currentUserName ? rec.subscriptionOnChannels : acc
             }, [])
-            return subscriptionsOfCurrentUser.map((subscribedChannel) => {
-              const isButtonDisable = subscribedChannel !== channelTitle
-              return (
-                <div key="buttons" className="flex flex-row p-4 grid justify-items-center">
-                  <div className="text-gray-200 text-2xl font-bold">{channelTitle}</div>
-                  <div className="flex flex-row">
-                    <div className="p-2">
-                      <button
-                        type="button"
-                        className={activeButton}
-                        onClick={() => {
-                          unsubscriptionOnClick(channelTitle)
-                        }}
-                        disabled={isButtonDisable}
-                      >
-                        Unsubscribe
-                      </button>
-                    </div>
-                    <div className="p-2">
-                      <button
-                        type="button"
-                        className={activeButton}
-                        onClick={() => {
-                          subscriptionOnClick(channelTitle)
-                        }}
-                        disabled={isButtonDisable}
-                      >
-                        Subscribe
-                      </button>
-                    </div>
+            const isButtonDisable = subscriptionsOfCurrentUser.find(
+              (subscribedChannel) => subscribedChannel !== channelTitle
+            )
+            return (
+              <div key="buttons" className="flex flex-row p-4 grid justify-items-center">
+                <div className="text-gray-200 text-2xl font-bold">{channelTitle}</div>
+                <div className="flex flex-row">
+                  <div className="p-2">
+                    <button
+                      type="button"
+                      className={activeButton}
+                      onClick={() => {
+                        unsubscriptionOnClick(channelTitle)
+                      }}
+                      disabled={isButtonDisable}
+                    >
+                      Unsubscribe
+                    </button>
+                  </div>
+                  <div className="p-2">
+                    <button
+                      type="button"
+                      className={activeButton}
+                      onClick={() => {
+                        subscriptionOnClick(channelTitle)
+                      }}
+                      disabled={isButtonDisable}
+                    >
+                      Subscribe
+                    </button>
                   </div>
                 </div>
-              )
-            })
+              </div>
+            )
           })}
 
-          <div className="pt-4">
+          <div className="pt-4 grid justify-center">
             <button
               type="button"
               className="px-7 py-2 rounded-full bg-gray-300 text-gray-600 max-w-max shadow-sm hover:bg-gray-300"

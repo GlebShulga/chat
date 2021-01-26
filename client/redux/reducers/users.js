@@ -1,13 +1,18 @@
 import axios from 'axios'
+import Cookies from 'universal-cookie'
+import { history } from '..'
 
 const ADD_USER = 'ADD_USER'
 const GET_USER_LIST = 'GET_USER_LIST'
 const SET_CURRENT_USER = 'SET_CURRENT_USER'
 const SUBSCRIPTION_ON_CHANNEL = 'SUBSCRIPTION_ON_CHANNEL'
 
+const cookies = new Cookies()
 const initialState = {
   listOfUsers: [],
-  currentUserName: ''
+  currentUserName: '',
+  token: cookies.get('token'),
+  user: {}
 }
 
 export default (state = initialState, action) => {
@@ -38,20 +43,21 @@ export function setCurrentUser(userName) {
   }
 }
 
-export function addUser(userId, userName, hashtag) {
+export function addUser(userId, userName, password, hashtag) {
   return (dispatch) => {
     axios({
       method: 'post',
-      url: `/api/v1/users`,
-      data: { userId, userName, hashtag }
-    }).then(({ data: listOfUsers }) => {
-      const currentUserName = listOfUsers[listOfUsers.length - 1].userName
-      dispatch({ type: ADD_USER, listOfUsers })
-      dispatch({
-        type: SET_CURRENT_USER,
-        currentUserName
-      })
+      url: '/api/v1/users',
+      headers: {
+        'content-Type': 'application/json'
+      },
+      data: { userId, userName, password, hashtag }
     })
+      .then((r) => r.json())
+      .then((data) => {
+        dispatch({ type: ADD_USER, token: data.token })
+        history.push('/login')
+      })
   }
 }
 

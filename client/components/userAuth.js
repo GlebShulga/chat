@@ -1,52 +1,52 @@
-// /* eslint-disable no-unused-vars */
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
-import { addUser } from '../redux/reducers/users'
+import { useHistory, Link } from 'react-router-dom'
+import { addUser, setCurrentUser } from '../redux/reducers/users'
+import { updateLoginField, updatePasswordField, singIn } from '../redux/reducers/auth'
 
-const UserRegistration = () => {
+const UserAuth = () => {
   const listOfUsers = useSelector((s) => s.users.listOfUsers)
+  const login = useSelector((s) => s.auth.login)
+  const password = useSelector((s) => s.auth.password)
   const dispatch = useDispatch()
+  const history = useHistory()
   const [userName, setUserName] = useState()
-  const [password, setPassword] = useState()
-  // const [userAlreadyExist, setUserAlreadyExist] = useState(false)
+  const [userAlreadyExist, setUserAlreadyExist] = useState(false)
+
+  // const onChange = (e) => {
+  //   setUserName(e.target.value)
+  // }
 
   const onChangeLogin = (e) => {
-    setUserName(e.target.value)
+    dispatch(updateLoginField(e.target.value))
   }
 
   const onChangePassword = (e) => {
-    setPassword(e.target.value)
+    dispatch(updatePasswordField(e.target.value))
   }
 
-  // const onChangeLogin = (e) => {
-  //   dispatch(updateLoginField(e.target.value))
-  // }
-
-  // const onChangePassword = (e) => {
-  //   dispatch(updatePasswordField(e.target.value))
-  // }
-
-  // const onClickExistingUser = () => {
-  //   dispatch(setCurrentUser(userName))
-  //   history.push('/main')
-  // }
-
-  const onClick = () => {
-    // if (listOfUsers.find((user) => user.userName === userName)) {
-    //   setUserAlreadyExist(true)
-    // } else {
-    const lastUser = listOfUsers[listOfUsers.length - 1]
-    const newUserId = lastUser.userId + 1
-    const hashtag = `#${userName}`
-    dispatch(addUser(newUserId, userName, password, hashtag))
-    // setUserAlreadyExist(false)
-    // }
+  const onClickExistingUser = () => {
+    dispatch(setCurrentUser(userName))
+    history.push('/main')
   }
 
   // const onClick = () => {
-  //   dispatch(singIn())
+  //   if (listOfUsers.find((user) => user.userName === userName)) {
+  //     setUserAlreadyExist(true)
+  //   } else {
+  //     const lastUser = listOfUsers[listOfUsers.length - 1]
+  //     const newUserId = lastUser.userId + 1
+  //     const hashtag = `#${userName}`
+  //     dispatch(addUser(newUserId, userName, hashtag))
+  //     history.push('/main')
+  //     setUserAlreadyExist(false)
+  //   }
   // }
+
+  const onClick = () => {
+    dispatch(singIn())
+  }
 
   return (
     <div className="flex flex-col h-screen w-screen bg-gray-100">
@@ -59,9 +59,7 @@ const UserRegistration = () => {
             bg-white rounded-lg shadow-md lg:shadow-lg"
         >
           {/* <!-- Card Title --> */}
-          <h2 className="text-center font-semibold text-3xl lg:text-4xl text-gray-800">
-            Registration
-          </h2>
+          <h2 className="text-center font-semibold text-3xl lg:text-4xl text-gray-800">Login</h2>
 
           <form className="mt-10">
             {/* <!-- Login Input --> */}
@@ -76,12 +74,12 @@ const UserRegistration = () => {
                     text-gray-800 appearance-none
                     border-b-2 border-gray-100
                     focus:text-gray-500 focus:outline-none focus:border-gray-200"
-              value={userName}
+              value={login}
               onChange={onChangeLogin}
               required
             />
-            {/* )}
-            {userAlreadyExist && (
+            {/* )} */}
+            {/* {userAlreadyExist && ( // условие при вводе неверных данных login/password. Заменить флаг
               <div>
                 <input
                   type="text"
@@ -98,7 +96,7 @@ const UserRegistration = () => {
                   User already exist
                 </div>
                 <div className="text-gray-700 font-semibold flex justify-center text-3xl pt-1">
-                  Choose another name
+                  Is it you?
                 </div>
               </div>
             )} */}
@@ -124,7 +122,6 @@ const UserRegistration = () => {
               onChange={onChangePassword}
             />
             {/* <!-- Auth Buttton --> */}
-            {/* {!userAlreadyExist && ( */}
             <button
               type="button"
               className="w-full py-3 mt-10 bg-gray-800 rounded-sm
@@ -132,35 +129,18 @@ const UserRegistration = () => {
                     focus:outline-none hover:bg-gray-700 hover:shadow-none"
               onClick={onClick}
             >
-              Registration
+              Login
             </button>
-            {/* // )} */}
-            {/* {userAlreadyExist && (
-              <div className="flex justify-around">
-                <button
-                  type="button"
-                  className="w-1/3 py-3 mt-10 bg-gray-800 rounded-sm
-                    font-medium text-white uppercase
-                    focus:outline-none hover:bg-gray-700 hover:shadow-none"
-                  onClick={() => setUserAlreadyExist(false)}
-                >
-                  No
-                </button>
-                <button
-                  type="button"
-                  className="w-1/3 py-3 mt-10 bg-gray-800 rounded-sm px-1
-                    font-medium text-white uppercase
-                    focus:outline-none hover:bg-gray-700 hover:shadow-none"
-                  onClick={onClickExistingUser}
-                >
-                  Yes
-                </button>
-              </div>
-            )} */}
             {/* <!-- Another Auth Routes --> */}
-            <div className="sm:flex sm:flex-wrap mt-8 sm:mb-4 text-sm justify-center">
-              <Link to="/login" className="flex-2 underline">
-                Back to the login page
+            <div className="sm:flex sm:flex-wrap mt-8 sm:mb-4 text-sm text-center">
+              <a href="forgot-password" className="flex-2 underline">
+                Forgot password?
+              </a>
+
+              <p className="flex-1 text-gray-500 text-md mx-4 my-1 sm:my-auto">or</p>
+
+              <Link to="/registration" className="flex-2 underline">
+                Create an Account
               </Link>
             </div>
           </form>
@@ -170,6 +150,6 @@ const UserRegistration = () => {
   )
 }
 
-UserRegistration.propTypes = {}
+UserAuth.propTypes = {}
 
-export default React.memo(UserRegistration)
+export default React.memo(UserAuth)
