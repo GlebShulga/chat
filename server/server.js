@@ -29,8 +29,7 @@ const { default: Root } = require('../dist/assets/js/ssr/root.bundle')
 // console.log('SSR not found. Please run "yarn run build:ssr"'.red)
 
 const templateUser = {
-  userId: '',
-  userName: '',
+  login: '',
   password: '',
   userImage: 'url',
   hashtag: '',
@@ -101,7 +100,6 @@ server.get('/api/v1/auth', async (req, res) => {
 })
 
 server.post('/api/v1/auth', async (req, res) => {
-  console.log(req.body)
   try {
     const user = await User.findAndValidateUser(req.body)
     const payload = { uid: user.id }
@@ -137,21 +135,18 @@ server.get('/api/v1/channels/:channelTitle', async (req, res) => {
 })
 
 server.post('/api/v1/users', async (req, res) => {
-  const { userName } = req.body
-  const { userId } = req.body
-  const { password } = req.password
+  const { login } = req.body
+  const { password } = req.body
   const { hashtag } = req.body
   // const { userImage } = req.body
   const user = new User({
     ...templateUser,
-    userId,
-    userName,
+    login,
     password,
     hashtag,
     userImage: 'photo'
   })
   user.save()
-  console.log(`User ${userName} added`)
   res.json({ status: 'ok' })
   //   const usersList = await readFile(`${__dirname}/base/users/users.json`, { encoding: 'utf8' })
   //     .then((existingUsers) => {
@@ -171,66 +166,80 @@ server.post('/api/v1/users', async (req, res) => {
 })
 
 server.get('/api/v1/users', async (req, res) => {
-  readFile(`${__dirname}/base/users/users.json`, { encoding: 'utf8' }).then((user) =>
-    res.json(JSON.parse(user))
-  )
+  User.find({}).then((listOfUsers) => {
+    res.json(listOfUsers)
+  })
 })
 
 server.patch('/api/v1/users', async (req, res) => {
-  const { userId } = req.body
+  const { _id } = req.body
   const { subscriptionOnChannels } = req.body
-  const updatedUserSubscriptions = await readFile(`${__dirname}/base/users/users.json`, {
-    encoding: 'utf8'
-  })
-    .then((listOfUsers) => {
-      return JSON.parse(listOfUsers).map((user) =>
-        user.userId === +userId
-          ? {
-              ...user,
-              subscriptionOnChannels: [...user.subscriptionOnChannels, subscriptionOnChannels]
-            }
-          : user
-      )
-    })
-    .catch(() => {
-      res.status(404)
-      res.end()
-    })
-  writeFile(`${__dirname}/base/users/users.json`, JSON.stringify(updatedUserSubscriptions), {
-    encoding: 'utf8'
-  })
-  res.json(updatedUserSubscriptions)
+  User.updateOne(
+    { _id },
+    {
+      $addToSet: {
+        subscriptionOnChannels: [subscriptionOnChannels]
+      }
+    },
+    (err, result) => {
+      if (err) {
+        res.send(err)
+      } else {
+        res.send(result)
+      }
+    }
+  )
 })
 
 server.delete('/api/v1/users', async (req, res) => {
-  const { userId } = req.body
+  const { _id } = req.body
   const { subscriptionOnChannels } = req.body
-  const updatedUserSubscriptions = await readFile(`${__dirname}/base/users/users.json`, {
-    encoding: 'utf8'
-  })
-    .then((listOfUsers) => {
-      return JSON.parse(listOfUsers).map((user) => {
-        if (user.userId === +userId) {
-          const filteredSubscriptions = user.subscriptionOnChannels.filter(
-            (subscription) => subscription !== subscriptionOnChannels
-          )
-          return {
-            ...user,
-            subscriptionOnChannels: filteredSubscriptions
-          }
-        }
-        return user
-      })
-    })
-    .catch(() => {
-      res.status(404)
-      res.end()
-    })
-  writeFile(`${__dirname}/base/users/users.json`, JSON.stringify(updatedUserSubscriptions), {
-    encoding: 'utf8'
-  })
-  res.json(updatedUserSubscriptions)
+  User.updateOne(
+    { _id },
+    {
+      $pullAll: {
+        subscriptionOnChannels: [subscriptionOnChannels]
+      }
+    },
+    (err, result) => {
+      if (err) {
+        res.send(err)
+      } else {
+        res.send(result)
+      }
+    }
+  )
 })
+
+// server.delete('/api/v1/users', async (req, res) => {
+//   const { userId } = req.body
+//   const { subscriptionOnChannels } = req.body
+//   const updatedUserSubscriptions = await readFile(`${__dirname}/base/users/users.json`, {
+//     encoding: 'utf8'
+//   })
+//     .then((listOfUsers) => {
+//       return JSON.parse(listOfUsers).map((user) => {
+//         if (user.userId === +userId) {
+//           const filteredSubscriptions = user.subscriptionOnChannels.filter(
+//             (subscription) => subscription !== subscriptionOnChannels
+//           )
+//           return {
+//             ...user,
+//             subscriptionOnChannels: filteredSubscriptions
+//           }
+//         }
+//         return user
+//       })
+//     })
+//     .catch(() => {
+//       res.status(404)
+//       res.end()
+//     })
+//   writeFile(`${__dirname}/base/users/users.json`, JSON.stringify(updatedUserSubscriptions), {
+//     encoding: 'utf8'
+//   })
+//   res.json(updatedUserSubscriptions)
+// })
 
 server.post('/api/v1/messages', async (req, res) => {
   const { messageText } = req.body

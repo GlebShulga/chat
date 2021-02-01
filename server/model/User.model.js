@@ -15,6 +15,11 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       require: true
+    },
+    hashtag: String,
+    subscriptionOnChannels: {
+      type: [String],
+      default: []
     }
   },
   { timestamp: true }

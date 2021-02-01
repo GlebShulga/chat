@@ -7,12 +7,12 @@ import { addUser } from '../redux/reducers/users'
 const UserRegistration = () => {
   const listOfUsers = useSelector((s) => s.users.listOfUsers)
   const dispatch = useDispatch()
-  const [userName, setUserName] = useState()
+  const [login, setLogin] = useState()
   const [password, setPassword] = useState()
   // const [userAlreadyExist, setUserAlreadyExist] = useState(false)
 
   const onChangeLogin = (e) => {
-    setUserName(e.target.value)
+    setLogin(e.target.value)
   }
 
   const onChangePassword = (e) => {
@@ -38,8 +38,8 @@ const UserRegistration = () => {
     // } else {
     const lastUser = listOfUsers[listOfUsers.length - 1]
     const newUserId = lastUser.userId + 1
-    const hashtag = `#${userName}`
-    dispatch(addUser(newUserId, userName, password, hashtag))
+    const hashtag = `#${login}`
+    dispatch(addUser(newUserId, login, password, hashtag))
     // setUserAlreadyExist(false)
     // }
   }
@@ -76,7 +76,7 @@ const UserRegistration = () => {
                     text-gray-800 appearance-none
                     border-b-2 border-gray-100
                     focus:text-gray-500 focus:outline-none focus:border-gray-200"
-              value={userName}
+              value={login}
               onChange={onChangeLogin}
               required
             />

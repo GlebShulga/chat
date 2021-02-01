@@ -26,10 +26,10 @@ const UserAuth = () => {
     dispatch(updatePasswordField(e.target.value))
   }
 
-  const onClickExistingUser = () => {
-    dispatch(setCurrentUser(userName))
-    history.push('/main')
-  }
+  // const onClickExistingUser = () => {
+  //   dispatch(setCurrentUser(userName))
+  //   history.push('/main')
+  // }
 
   // const onClick = () => {
   //   if (listOfUsers.find((user) => user.userName === userName)) {

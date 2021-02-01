@@ -72,6 +72,7 @@ const RootComponent = (props) => {
           <Switch>
             <OnlyAnonymousRoute exact path="/login" component={() => <MasterPage />} />
             <Route exact path="/registration" component={() => <MasterPage />} />
+            <Route exact path="/main" component={() => <MasterPage />} />
             <Route exact path="/" component={() => <MasterPage />} />
             <Route exact path="/channel/:channel" component={() => <MasterPage />} />
             <PrivateRoute exact path="/private" component={() => <PrivateComponent />} />

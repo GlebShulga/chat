@@ -43,7 +43,7 @@ export function setCurrentUser(userName) {
   }
 }
 
-export function addUser(userId, userName, password, hashtag) {
+export function addUser(login, password, hashtag) {
   return (dispatch) => {
     axios({
       method: 'post',
@@ -51,9 +51,9 @@ export function addUser(userId, userName, password, hashtag) {
       headers: {
         'content-Type': 'application/json'
       },
-      data: { userId, userName, password, hashtag }
+      data: { login, password, hashtag }
     })
-      .then((r) => r.json())
+      .then((r) => r.data)
       .then((data) => {
         dispatch({ type: ADD_USER, token: data.token })
         history.push('/login')
