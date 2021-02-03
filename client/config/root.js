@@ -8,22 +8,24 @@ import { Switch, Route, Redirect, StaticRouter } from 'react-router-dom'
 import store, { history } from '../redux'
 
 import MasterPage from '../components/master-page'
+import UserAuth from '../components/userAuth'
+import UserRegistration from '../components/userRegistration'
 import NotFound from '../components/404'
-import PrivateComponent from '../components/private-route'
+// import PrivateComponent from '../components/private-route'
 
 import Startup from './startup'
 
 const OnlyAnonymousRoute = ({ component: Component, ...rest }) => {
   const auth = useSelector((s) => s.auth)
   const func = (props) =>
-    !!auth.user && !!rest.token ? <Redirect to={{ pathname: '/' }} /> : <Component {...props} />
+    !!auth.user && !!rest.token ? <Redirect to={{ pathname: '/main' }} /> : <Component {...props} />
   return <Route {...rest} render={func} />
 }
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
   const auth = useSelector((s) => s.auth)
   const func = (props) =>
-    !!auth.user && !!rest.token ? (
+    !!auth.user && !!auth.token ? (
       <Component {...props} />
     ) : (
       <Redirect
@@ -70,12 +72,12 @@ const RootComponent = (props) => {
       <RouterSelector history={history} location={props.location} context={props.context}>
         <Startup>
           <Switch>
-            <OnlyAnonymousRoute exact path="/login" component={() => <MasterPage />} />
-            <Route exact path="/registration" component={() => <MasterPage />} />
-            <Route exact path="/main" component={() => <MasterPage />} />
-            <Route exact path="/" component={() => <MasterPage />} />
-            <Route exact path="/channel/:channel" component={() => <MasterPage />} />
-            <PrivateRoute exact path="/private" component={() => <PrivateComponent />} />
+            <OnlyAnonymousRoute exact path="/login" component={() => <UserAuth />} />
+            <OnlyAnonymousRoute exact path="/registration" component={() => <UserRegistration />} />
+            <Route exact path="/" component={() => <UserAuth />} />
+            <PrivateRoute exact path="/main" component={() => <MasterPage />} />
+            <PrivateRoute exact path="/channel/:channel" component={() => <MasterPage />} />
+            {/* <PrivateRoute exact path="/private" component={() => <PrivateComponent />} /> */}
             <Route component={() => <NotFound />} />
           </Switch>
         </Startup>

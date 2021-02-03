@@ -1,15 +1,16 @@
-// /* eslint-disable no-unused-vars */
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { addUser } from '../redux/reducers/users'
 
 const UserRegistration = () => {
-  const listOfUsers = useSelector((s) => s.users.listOfUsers)
+  const error = useSelector((s) => s.users.error)
+  console.log(error)
   const dispatch = useDispatch()
   const [login, setLogin] = useState()
   const [password, setPassword] = useState()
-  // const [userAlreadyExist, setUserAlreadyExist] = useState(false)
+  const [userAlreadyExist, setUserAlreadyExist] = useState(false)
+  console.log(userAlreadyExist)
 
   const onChangeLogin = (e) => {
     setLogin(e.target.value)
@@ -19,34 +20,15 @@ const UserRegistration = () => {
     setPassword(e.target.value)
   }
 
-  // const onChangeLogin = (e) => {
-  //   dispatch(updateLoginField(e.target.value))
-  // }
-
-  // const onChangePassword = (e) => {
-  //   dispatch(updatePasswordField(e.target.value))
-  // }
-
-  // const onClickExistingUser = () => {
-  //   dispatch(setCurrentUser(userName))
-  //   history.push('/main')
-  // }
-
   const onClick = () => {
-    // if (listOfUsers.find((user) => user.userName === userName)) {
-    //   setUserAlreadyExist(true)
-    // } else {
-    const lastUser = listOfUsers[listOfUsers.length - 1]
-    const newUserId = lastUser.userId + 1
-    const hashtag = `#${login}`
-    dispatch(addUser(newUserId, login, password, hashtag))
-    // setUserAlreadyExist(false)
-    // }
+    if (error) {
+      setUserAlreadyExist(true)
+    } else {
+      const hashtag = `#${login}`
+      dispatch(addUser(login, password, hashtag))
+      setUserAlreadyExist(false)
+    }
   }
-
-  // const onClick = () => {
-  //   dispatch(singIn())
-  // }
 
   return (
     <div className="flex flex-col h-screen w-screen bg-gray-100">
@@ -68,19 +50,19 @@ const UserRegistration = () => {
             <label htmlFor="text" className="block text-xs font-semibold text-gray-600 uppercase">
               Login
             </label>
-            {/* {!userAlreadyExist && ( */}
-            <input
-              type="text"
-              placeholder="Type your login"
-              className="block w-full py-3 px-1 mt-2
+            {!userAlreadyExist && (
+              <input
+                type="text"
+                placeholder="Type your login"
+                className="block w-full py-3 px-1 mt-2
                     text-gray-800 appearance-none
                     border-b-2 border-gray-100
                     focus:text-gray-500 focus:outline-none focus:border-gray-200"
-              value={login}
-              onChange={onChangeLogin}
-              required
-            />
-            {/* )}
+                value={login}
+                onChange={onChangeLogin}
+                required
+              />
+            )}
             {userAlreadyExist && (
               <div>
                 <input
@@ -90,8 +72,8 @@ const UserRegistration = () => {
                     text-gray-800 appearance-none
                     border-b-2 border-red-600
                     focus:text-gray-500 focus:outline-none focus:border-gray-200"
-                  value={userName}
-                  // onChange={onChange}
+                  value={login}
+                  onChange={onChangeLogin}
                   required
                 />
                 <div className="text-red-500 font-semibold flex justify-center text-lg pt-1">
@@ -101,7 +83,7 @@ const UserRegistration = () => {
                   Choose another name
                 </div>
               </div>
-            )} */}
+            )}
             {/* <!-- Password Input --> */}
             <label
               htmlFor="password"
@@ -124,7 +106,6 @@ const UserRegistration = () => {
               onChange={onChangePassword}
             />
             {/* <!-- Auth Buttton --> */}
-            {/* {!userAlreadyExist && ( */}
             <button
               type="button"
               className="w-full py-3 mt-10 bg-gray-800 rounded-sm
@@ -134,29 +115,6 @@ const UserRegistration = () => {
             >
               Registration
             </button>
-            {/* // )} */}
-            {/* {userAlreadyExist && (
-              <div className="flex justify-around">
-                <button
-                  type="button"
-                  className="w-1/3 py-3 mt-10 bg-gray-800 rounded-sm
-                    font-medium text-white uppercase
-                    focus:outline-none hover:bg-gray-700 hover:shadow-none"
-                  onClick={() => setUserAlreadyExist(false)}
-                >
-                  No
-                </button>
-                <button
-                  type="button"
-                  className="w-1/3 py-3 mt-10 bg-gray-800 rounded-sm px-1
-                    font-medium text-white uppercase
-                    focus:outline-none hover:bg-gray-700 hover:shadow-none"
-                  onClick={onClickExistingUser}
-                >
-                  Yes
-                </button>
-              </div>
-            )} */}
             {/* <!-- Another Auth Routes --> */}
             <div className="sm:flex sm:flex-wrap mt-8 sm:mb-4 text-sm justify-center">
               <Link to="/login" className="flex-2 underline">

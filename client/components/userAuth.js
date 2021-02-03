@@ -1,22 +1,15 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory, Link } from 'react-router-dom'
-import { addUser, setCurrentUser } from '../redux/reducers/users'
+import { Link } from 'react-router-dom'
 import { updateLoginField, updatePasswordField, singIn } from '../redux/reducers/auth'
 
 const UserAuth = () => {
-  const listOfUsers = useSelector((s) => s.users.listOfUsers)
+  const error = useSelector((s) => s.auth.error)
   const login = useSelector((s) => s.auth.login)
   const password = useSelector((s) => s.auth.password)
   const dispatch = useDispatch()
-  const history = useHistory()
-  const [userName, setUserName] = useState()
-  const [userAlreadyExist, setUserAlreadyExist] = useState(false)
-
-  // const onChange = (e) => {
-  //   setUserName(e.target.value)
-  // }
+  const [userDataIncorrect, setUserDataIncorrect] = useState(false)
 
   const onChangeLogin = (e) => {
     dispatch(updateLoginField(e.target.value))
@@ -25,11 +18,6 @@ const UserAuth = () => {
   const onChangePassword = (e) => {
     dispatch(updatePasswordField(e.target.value))
   }
-
-  // const onClickExistingUser = () => {
-  //   dispatch(setCurrentUser(userName))
-  //   history.push('/main')
-  // }
 
   // const onClick = () => {
   //   if (listOfUsers.find((user) => user.userName === userName)) {
@@ -45,7 +33,12 @@ const UserAuth = () => {
   // }
 
   const onClick = () => {
-    dispatch(singIn())
+    if (error) {
+      setUserDataIncorrect(true)
+    } else {
+      dispatch(singIn())
+      setUserDataIncorrect(false)
+    }
   }
 
   return (
@@ -66,7 +59,6 @@ const UserAuth = () => {
             <label htmlFor="text" className="block text-xs font-semibold text-gray-600 uppercase">
               Login
             </label>
-            {/* {!userAlreadyExist && ( */}
             <input
               type="text"
               placeholder="Type your login"
@@ -78,28 +70,6 @@ const UserAuth = () => {
               onChange={onChangeLogin}
               required
             />
-            {/* )} */}
-            {/* {userAlreadyExist && ( // условие при вводе неверных данных login/password. Заменить флаг
-              <div>
-                <input
-                  type="text"
-                  placeholder="Type your login"
-                  className="block w-full py-3 px-1 mt-2
-                    text-gray-800 appearance-none
-                    border-b-2 border-red-600
-                    focus:text-gray-500 focus:outline-none focus:border-gray-200"
-                  value={userName}
-                  // onChange={onChange}
-                  required
-                />
-                <div className="text-red-500 font-semibold flex justify-center text-lg pt-1">
-                  User already exist
-                </div>
-                <div className="text-gray-700 font-semibold flex justify-center text-3xl pt-1">
-                  Is it you?
-                </div>
-              </div>
-            )} */}
             {/* <!-- Password Input --> */}
             <label
               htmlFor="password"
@@ -121,6 +91,13 @@ const UserAuth = () => {
               value={password}
               onChange={onChangePassword}
             />
+            {userDataIncorrect && (
+              <div>
+                <div className="text-red-500 font-semibold flex justify-center text-lg pt-1">
+                  Login or password is not correct
+                </div>
+              </div>
+            )}
             {/* <!-- Auth Buttton --> */}
             <button
               type="button"

@@ -4,13 +4,15 @@ import { history } from '..'
 const UPDATE_LOGIN = 'UPDATE_LOGIN'
 const UPDATE_PASSWORD = 'UPDATE_PASSWORD'
 const LOGIN = 'LOGIN'
+const SET_ERROR = 'SET_ERROR'
 
 const cookies = new Cookies()
 const initialState = {
   login: '',
   password: '',
   token: cookies.get('token'),
-  user: {}
+  user: {},
+  error: null
 }
 
 export default (state = initialState, action) => {
@@ -23,6 +25,9 @@ export default (state = initialState, action) => {
     }
     case UPDATE_PASSWORD: {
       return { ...state, password: action.password }
+    }
+    case SET_ERROR: {
+      return { ...state, error: action.error }
     }
     default:
       return state
@@ -45,9 +50,9 @@ export function tryGetUserInfo() {
         .then((data) => {
           console.log(data)
         })
-        .catch((err) => err)
-    } catch (err) {
-      console.log(err)
+        .catch((error) => error)
+    } catch (error) {
+      console.log(error)
     }
   }
 }
@@ -76,10 +81,11 @@ export function singIn() {
         password
       })
     })
-      .then((r) => r.json())
+      .then((res) => res.json())
       .then((data) => {
         dispatch({ type: LOGIN, token: data.token, user: data.user })
         history.push('/main')
       })
+      .catch((error) => dispatch({ type: SET_ERROR, error }))
   }
 }

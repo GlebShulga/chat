@@ -6,13 +6,15 @@ const ADD_USER = 'ADD_USER'
 const GET_USER_LIST = 'GET_USER_LIST'
 const SET_CURRENT_USER = 'SET_CURRENT_USER'
 const SUBSCRIPTION_ON_CHANNEL = 'SUBSCRIPTION_ON_CHANNEL'
+const SET_ERROR = 'SET_ERROR'
 
 const cookies = new Cookies()
 const initialState = {
   listOfUsers: [],
   currentUserName: '',
   token: cookies.get('token'),
-  user: {}
+  user: {},
+  error: null
 }
 
 export default (state = initialState, action) => {
@@ -24,6 +26,9 @@ export default (state = initialState, action) => {
     }
     case SET_CURRENT_USER: {
       return { ...state, currentUserName: action.currentUserName }
+    }
+    case SET_ERROR: {
+      return { ...state, error: action.error }
     }
     default:
       return state
@@ -58,6 +63,7 @@ export function addUser(login, password, hashtag) {
         dispatch({ type: ADD_USER, token: data.token })
         history.push('/login')
       })
+      .catch(() => dispatch({ type: SET_ERROR, error: 'User already exist' }))
   }
 }
 

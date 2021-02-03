@@ -18,10 +18,10 @@ import config from './config'
 import Html from '../client/html'
 
 import User from './model/User.model'
+import Message from './model/Message.model'
+import Channel from './model/Channel.model'
 
 mongooseService.connect()
-
-const { writeFile, readFile, readdir } = require('fs').promises
 
 require('colors')
 
@@ -38,23 +38,10 @@ const templateUser = {
 
 const templateMessage = {
   userId: '',
-  channel: '',
-  messageId: '',
+  channelId: '',
   messageText: '',
   createdAt: +new Date(),
   metaObj: {}
-}
-
-function toWriteChannel(channelTitle, text = {}) {
-  writeFile(`${__dirname}/base/channels/${channelTitle}.json`, JSON.stringify(text), {
-    encoding: 'utf8'
-  })
-}
-
-function toReadChannel(channelTitle) {
-  return readFile(`${__dirname}/base/channels/${channelTitle}.json`, {
-    encoding: 'utf8'
-  }).then((channel) => JSON.parse(channel))
 }
 
 let connections = []
@@ -88,7 +75,7 @@ server.get('/api/v1/auth', async (req, res) => {
     const jwtUser = jwt.verify(req.cookies.token, config.secret)
     const user = await User.findById(jwtUser.uid)
 
-    const payload = { uid: user.id }
+    const payload = { uid: user._id }
     const token = jwt.sign(payload, config.secret, { expiresIn: '48h' })
     delete user.password
     res.cookie('token', token, { maxAge: 1000 * 60 * 60 * 48 })
@@ -102,7 +89,7 @@ server.get('/api/v1/auth', async (req, res) => {
 server.post('/api/v1/auth', async (req, res) => {
   try {
     const user = await User.findAndValidateUser(req.body)
-    const payload = { uid: user.id }
+    const payload = { uid: user._id }
     const token = jwt.sign(payload, config.secret, { expiresIn: '48h' })
     delete user.password
     res.cookie('token', token, { maxAge: 1000 * 60 * 60 * 48 })
@@ -113,25 +100,49 @@ server.post('/api/v1/auth', async (req, res) => {
   }
 })
 
+// server.post('/api/v1/channels/:channelTitle', async (req, res) => {
+//   const { channelTitle } = req.params
+//   const { channelDescription } = req.body
+//   toWriteChannel(channelTitle, { channelTitle, channelDescription }).then(async () => {
+//     await toReadChannel(channelTitle).then((channel) => res.json(channel))
+//   })
+//   res.json({ status: 'ok' })
+// })
+
 server.post('/api/v1/channels/:channelTitle', async (req, res) => {
   const { channelTitle } = req.params
   const { channelDescription } = req.body
-  toWriteChannel(channelTitle, { channelTitle, channelDescription }).then(async () => {
-    await toReadChannel(channelTitle).then((channel) => res.json(channel))
+  const channel = new Channel({
+    channelTitle,
+    channelDescription
   })
+  channel.save()
   res.json({ status: 'ok' })
 })
 
+// server.get('/api/v1/channelsList', async (req, res) => {
+//   const channelsList = await readdir(`${__dirname}/base/channels`).then((fileNames) =>
+//     fileNames.map((channelTitleJson) => channelTitleJson.slice(0, -5))
+//   )
+//   res.json(channelsList)
+// })
+
 server.get('/api/v1/channelsList', async (req, res) => {
-  const channelsList = await readdir(`${__dirname}/base/channels`).then((fileNames) =>
-    fileNames.map((channelTitleJson) => channelTitleJson.slice(0, -5))
-  )
-  res.json(channelsList)
+  Channel.find({}).then((channelsList) => {
+    res.json(channelsList)
+  })
 })
+
+// server.get('/api/v1/channels/:channelTitle', async (req, res) => {
+//   const { channelTitle } = req.params
+//   await toReadChannel(channelTitle).then((channel) => res.json(channel))
+// })
 
 server.get('/api/v1/channels/:channelTitle', async (req, res) => {
   const { channelTitle } = req.params
-  await toReadChannel(channelTitle).then((channel) => res.json(channel))
+  Channel.findOne({ channelTitle }).then((channel) => {
+    res.json(channel)
+  })
 })
 
 server.post('/api/v1/users', async (req, res) => {
@@ -139,30 +150,21 @@ server.post('/api/v1/users', async (req, res) => {
   const { password } = req.body
   const { hashtag } = req.body
   // const { userImage } = req.body
-  const user = new User({
-    ...templateUser,
-    login,
-    password,
-    hashtag,
-    userImage: 'photo'
+  User.findOne({ login }).then((ok) => {
+    if (!ok) {
+      const user = new User({
+        ...templateUser,
+        login,
+        password,
+        hashtag,
+        userImage: 'photo'
+      })
+      user.save()
+      res.json({ status: 'ok' })
+    } else {
+      res.status(504).send('User already exist')
+    }
   })
-  user.save()
-  res.json({ status: 'ok' })
-  //   const usersList = await readFile(`${__dirname}/base/users/users.json`, { encoding: 'utf8' })
-  //     .then((existingUsers) => {
-  //       const list = [...JSON.parse(existingUsers), newUser]
-  //       writeFile(`${__dirname}/base/users/users.json`, JSON.stringify(list), {
-  //         encoding: 'utf8'
-  //       })
-  //       res.json(list)
-  //     })
-  //     .catch(async () => {
-  //       writeFile(`${__dirname}/base/users/users.json`, JSON.stringify([newUser]), {
-  //         encoding: 'utf8'
-  //       })
-  //       res.json([newUser])
-  //     })
-  //   res.json(usersList)
 })
 
 server.get('/api/v1/users', async (req, res) => {
@@ -211,73 +213,31 @@ server.delete('/api/v1/users', async (req, res) => {
   )
 })
 
-// server.delete('/api/v1/users', async (req, res) => {
-//   const { userId } = req.body
-//   const { subscriptionOnChannels } = req.body
-//   const updatedUserSubscriptions = await readFile(`${__dirname}/base/users/users.json`, {
-//     encoding: 'utf8'
-//   })
-//     .then((listOfUsers) => {
-//       return JSON.parse(listOfUsers).map((user) => {
-//         if (user.userId === +userId) {
-//           const filteredSubscriptions = user.subscriptionOnChannels.filter(
-//             (subscription) => subscription !== subscriptionOnChannels
-//           )
-//           return {
-//             ...user,
-//             subscriptionOnChannels: filteredSubscriptions
-//           }
-//         }
-//         return user
-//       })
-//     })
-//     .catch(() => {
-//       res.status(404)
-//       res.end()
-//     })
-//   writeFile(`${__dirname}/base/users/users.json`, JSON.stringify(updatedUserSubscriptions), {
-//     encoding: 'utf8'
-//   })
-//   res.json(updatedUserSubscriptions)
-// })
-
 server.post('/api/v1/messages', async (req, res) => {
   const { messageText } = req.body
-  const { channel } = req.body
-  const { messageId } = req.body
+  const { channelId } = req.body
   const { userId } = req.body
-  const newMessage = {
+  const message = new Message({
     ...templateMessage,
     userId,
-    channel,
-    messageId,
-    messageText,
-    createdAt: +new Date()
-  }
-  const messageList = await readFile(`${__dirname}/base/messages/message.json`, {
-    encoding: 'utf8'
+    channelId,
+    messageText
   })
-    .then((existingMessages) => {
-      const list = [...JSON.parse(existingMessages), newMessage]
-      writeFile(`${__dirname}/base/messages/message.json`, JSON.stringify(list), {
-        encoding: 'utf8'
-      })
-      res.json(list)
-    })
-    .catch(async () => {
-      writeFile(`${__dirname}/base/messages/message.json`, JSON.stringify([newMessage]), {
-        encoding: 'utf8'
-      })
-      res.json([newMessage])
-    })
-  res.json(messageList)
+  message.save()
+  res.json({ status: 'ok' })
 })
 
 server.get('/api/v1/messages', (req, res) => {
-  readFile(`${__dirname}/base/messages/message.json`, { encoding: 'utf8' }).then((message) =>
-    res.json(JSON.parse(message))
-  )
+  Message.find({}).then((listOfMessages) => {
+    res.json(listOfMessages)
+  })
 })
+
+// server.get('/api/v1/messages', (req, res) => {
+//   readFile(`${__dirname}/base/messages/message.json`, { encoding: 'utf8' }).then((message) =>
+//     res.json(JSON.parse(message))
+//   )
+// })
 
 server.use('/api/', (req, res) => {
   res.status(404)
@@ -286,7 +246,7 @@ server.use('/api/', (req, res) => {
 
 const [htmlStart, htmlEnd] = Html({
   body: 'separator',
-  title: 'Skillcrucial'
+  title: 'Boilerplate'
 }).split('separator')
 
 server.get('/', (req, res) => {
