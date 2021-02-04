@@ -86,6 +86,6 @@ export function singIn() {
         dispatch({ type: LOGIN, token: data.token, user: data.user })
         history.push('/main')
       })
-      .catch((error) => dispatch({ type: SET_ERROR, error }))
+      .catch(() => dispatch({ type: SET_ERROR, error: 'Login or password is not correct' }))
   }
 }

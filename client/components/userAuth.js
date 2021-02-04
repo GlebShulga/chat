@@ -9,7 +9,7 @@ const UserAuth = () => {
   const login = useSelector((s) => s.auth.login)
   const password = useSelector((s) => s.auth.password)
   const dispatch = useDispatch()
-  const [userDataIncorrect, setUserDataIncorrect] = useState(false)
+  // const [userDataIncorrect, setUserDataIncorrect] = useState(false)
 
   const onChangeLogin = (e) => {
     dispatch(updateLoginField(e.target.value))
@@ -19,26 +19,8 @@ const UserAuth = () => {
     dispatch(updatePasswordField(e.target.value))
   }
 
-  // const onClick = () => {
-  //   if (listOfUsers.find((user) => user.userName === userName)) {
-  //     setUserAlreadyExist(true)
-  //   } else {
-  //     const lastUser = listOfUsers[listOfUsers.length - 1]
-  //     const newUserId = lastUser.userId + 1
-  //     const hashtag = `#${userName}`
-  //     dispatch(addUser(newUserId, userName, hashtag))
-  //     history.push('/main')
-  //     setUserAlreadyExist(false)
-  //   }
-  // }
-
   const onClick = () => {
-    if (error) {
-      setUserDataIncorrect(true)
-    } else {
-      dispatch(singIn())
-      setUserDataIncorrect(false)
-    }
+    dispatch(singIn())
   }
 
   return (
@@ -91,7 +73,7 @@ const UserAuth = () => {
               value={password}
               onChange={onChangePassword}
             />
-            {userDataIncorrect && (
+            {error && (
               <div>
                 <div className="text-red-500 font-semibold flex justify-center text-lg pt-1">
                   Login or password is not correct

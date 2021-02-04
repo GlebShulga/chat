@@ -6,9 +6,9 @@ import ButtonAddChannel from './add_show_Channels/buttonAddChannel'
 import ButtonShowChannels from './add_show_Channels/buttonShowChannels'
 
 const Sidebar = () => {
-  const channelsList = useSelector((s) => s.channels.listOfChannels)
-  const listOfUsers = useSelector((s) => s.users.listOfUsers)
-  const currentUserName = useSelector((s) => s.users.currentUserName)
+  const currentUser = useSelector((s) => s.auth.user)
+  const currentUserSubscriptionOnChannels = currentUser.subscriptionOnChannels
+  console.log(currentUserSubscriptionOnChannels)
   const { channel: currenChannelTitle } = useParams()
   return (
     <div className="bg-purple-900 text-purple-300 w-1/5 pb-6 hidden md:block">
@@ -22,7 +22,7 @@ const Sidebar = () => {
       </h1>
       <div className="flex items-center mb-6 px-4">
         <span className="bg-green-500 rounded-full block w-2 h-2 mr-2" />
-        <span className="text-purple-300">{currentUserName}</span>
+        <span className="text-purple-300">{currentUser.login}</span>
       </div>
       <div>
         <div className="flex justify-between py-3">
@@ -37,28 +37,21 @@ const Sidebar = () => {
           </div>
         </div>
         <div className="mb-6 py-1 px-4 text-white font-semibold">
-          {channelsList.map((channelTitle) => {
-            const subscriptionsOfCurrentUser = listOfUsers.reduce((acc, rec) => {
-              return rec.userName === currentUserName ? rec.subscriptionOnChannels : acc
-            }, [])
-            return subscriptionsOfCurrentUser.map(
-              (subscribedChannel) =>
-                subscribedChannel === channelTitle &&
-                (currenChannelTitle === channelTitle ? (
-                  <div key={channelTitle} className="bg-green-500 py-1">
-                    <div className="hover:text-gray-200">
-                      <Link to={`/${channelTitle}`}>{`# ${channelTitle}`}</Link>
-                    </div>
-                  </div>
-                ) : (
-                  <div key={channelTitle} className="py-1">
-                    <div className="hover:text-gray-400">
-                      <Link to={`/${channelTitle}`}>{`# ${channelTitle}`}</Link>
-                    </div>
-                  </div>
-                ))
+          {currentUserSubscriptionOnChannels.map((subscribedChannel) =>
+            currenChannelTitle === subscribedChannel ? (
+              <div key={currenChannelTitle} className="bg-green-500 py-1">
+                <div className="hover:text-gray-200">
+                  <Link to={`/${currenChannelTitle}`}>{`# ${currenChannelTitle}`}</Link>
+                </div>
+              </div>
+            ) : (
+              <div key={subscribedChannel} className="py-1">
+                <div className="hover:text-gray-400">
+                  <Link to={`/${subscribedChannel}`}>{`# ${subscribedChannel}`}</Link>
+                </div>
+              </div>
             )
-          })}
+          )}
         </div>
       </div>
       <div className="px-4 mb-3 font-sans">Direct Messages</div>
@@ -66,7 +59,7 @@ const Sidebar = () => {
       <div className="flex items-center mb-3 px-4">
         <span className="bg-green-500 rounded-full block w-2 h-2 mr-2" />
         <span className="text-purple-300">
-          {currentUserName} <i className="text-grey-400 text-sm">(me)</i>
+          {currentUser.login} <i className="text-grey-400 text-sm">(me)</i>
         </span>
       </div>
 

@@ -3,10 +3,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import Head from '../head'
 import { addChannel } from '../../redux/reducers/channels'
+import { subscriptionOnChannel } from '../../redux/reducers/users'
 
 const AddChannel = (props) => {
   const history = useHistory()
   const listOfChannels = useSelector((s) => s.channels.listOfChannels)
+  const creatorId = useSelector((s) => s.auth.user._id)
   const [channelTitle, setChannelTitle] = useState()
   const [channelDescription, setChannelDescription] = useState()
   const [channelAlreadyExist, setChannelAlreadyExist] = useState(false)
@@ -19,7 +21,8 @@ const AddChannel = (props) => {
   }
   const onClick = () => {
     if (listOfChannels.indexOf(channelTitle) === -1) {
-      dispatch(addChannel(channelTitle, channelDescription))
+      dispatch(addChannel(creatorId, channelTitle, channelDescription))
+      dispatch(subscriptionOnChannel(creatorId, channelTitle))
       history.push(`/${channelTitle}`)
       props.setToggle(false)
       setChannelAlreadyExist(false)

@@ -26,7 +26,7 @@ const MasterPage = () => {
         <Route exact path="/login" component={() => <UserAuth />} />
         <Route exact path="/registration" component={() => <UserRegistration />} /> */}
         <Route exact path="/main" component={() => <MainWindow />} />
-        <Route exact path="/channel/:channel" component={() => <Channel />} />
+        <Route exact path="/:channel" component={() => <Channel />} />
         <Route exact path="/*" component={() => <NotFound />} />
       </Switch>
     </div>

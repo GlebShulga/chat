@@ -40,7 +40,6 @@ const templateMessage = {
   userId: '',
   channelId: '',
   messageText: '',
-  createdAt: +new Date(),
   metaObj: {}
 }
 
@@ -96,47 +95,30 @@ server.post('/api/v1/auth', async (req, res) => {
     res.json({ status: 'ok', token, user })
   } catch (err) {
     console.log(err)
-    res.json({ status: 'error', err })
+    res.status(504).send('Login or password is not correct')
   }
 })
-
-// server.post('/api/v1/channels/:channelTitle', async (req, res) => {
-//   const { channelTitle } = req.params
-//   const { channelDescription } = req.body
-//   toWriteChannel(channelTitle, { channelTitle, channelDescription }).then(async () => {
-//     await toReadChannel(channelTitle).then((channel) => res.json(channel))
-//   })
-//   res.json({ status: 'ok' })
-// })
 
 server.post('/api/v1/channels/:channelTitle', async (req, res) => {
   const { channelTitle } = req.params
   const { channelDescription } = req.body
+  const { creatorId } = req.body
   const channel = new Channel({
+    creatorId,
     channelTitle,
     channelDescription
   })
   channel.save()
-  res.json({ status: 'ok' })
+  Channel.find({}).then((channelsList) => {
+    res.json(channelsList)
+  })
 })
-
-// server.get('/api/v1/channelsList', async (req, res) => {
-//   const channelsList = await readdir(`${__dirname}/base/channels`).then((fileNames) =>
-//     fileNames.map((channelTitleJson) => channelTitleJson.slice(0, -5))
-//   )
-//   res.json(channelsList)
-// })
 
 server.get('/api/v1/channelsList', async (req, res) => {
   Channel.find({}).then((channelsList) => {
     res.json(channelsList)
   })
 })
-
-// server.get('/api/v1/channels/:channelTitle', async (req, res) => {
-//   const { channelTitle } = req.params
-//   await toReadChannel(channelTitle).then((channel) => res.json(channel))
-// })
 
 server.get('/api/v1/channels/:channelTitle', async (req, res) => {
   const { channelTitle } = req.params
@@ -150,8 +132,8 @@ server.post('/api/v1/users', async (req, res) => {
   const { password } = req.body
   const { hashtag } = req.body
   // const { userImage } = req.body
-  User.findOne({ login }).then((ok) => {
-    if (!ok) {
+  User.findOne({ login }).then((u) => {
+    if (!u) {
       const user = new User({
         ...templateUser,
         login,
@@ -224,7 +206,9 @@ server.post('/api/v1/messages', async (req, res) => {
     messageText
   })
   message.save()
-  res.json({ status: 'ok' })
+  Message.find({}).then((listOfMessages) => {
+    res.json(listOfMessages)
+  })
 })
 
 server.get('/api/v1/messages', (req, res) => {
@@ -232,12 +216,6 @@ server.get('/api/v1/messages', (req, res) => {
     res.json(listOfMessages)
   })
 })
-
-// server.get('/api/v1/messages', (req, res) => {
-//   readFile(`${__dirname}/base/messages/message.json`, { encoding: 'utf8' }).then((message) =>
-//     res.json(JSON.parse(message))
-//   )
-// })
 
 server.use('/api/', (req, res) => {
   res.status(404)

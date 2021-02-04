@@ -5,12 +5,11 @@ import { addUser } from '../redux/reducers/users'
 
 const UserRegistration = () => {
   const error = useSelector((s) => s.users.error)
-  console.log(error)
   const dispatch = useDispatch()
   const [login, setLogin] = useState()
   const [password, setPassword] = useState()
-  const [userAlreadyExist, setUserAlreadyExist] = useState(false)
-  console.log(userAlreadyExist)
+  const loginInputClassName =
+    'block w-full py-3 px-1 mt-2 text-gray-800 appearance-none border-b-2 border-gray-100 focus:text-gray-500 focus:outline-none focus:border-gray-200'
 
   const onChangeLogin = (e) => {
     setLogin(e.target.value)
@@ -21,13 +20,8 @@ const UserRegistration = () => {
   }
 
   const onClick = () => {
-    if (error) {
-      setUserAlreadyExist(true)
-    } else {
-      const hashtag = `#${login}`
-      dispatch(addUser(login, password, hashtag))
-      setUserAlreadyExist(false)
-    }
+    const hashtag = `#${login}`
+    dispatch(addUser(login, password, hashtag))
   }
 
   return (
@@ -50,36 +44,20 @@ const UserRegistration = () => {
             <label htmlFor="text" className="block text-xs font-semibold text-gray-600 uppercase">
               Login
             </label>
-            {!userAlreadyExist && (
-              <input
-                type="text"
-                placeholder="Type your login"
-                className="block w-full py-3 px-1 mt-2
-                    text-gray-800 appearance-none
-                    border-b-2 border-gray-100
-                    focus:text-gray-500 focus:outline-none focus:border-gray-200"
-                value={login}
-                onChange={onChangeLogin}
-                required
-              />
-            )}
-            {userAlreadyExist && (
+            <input
+              type="text"
+              placeholder="Type your login"
+              className={error ? loginInputClassName.concat('border-red-600') : loginInputClassName}
+              value={login}
+              onChange={onChangeLogin}
+              required
+            />
+            {error && (
               <div>
-                <input
-                  type="text"
-                  placeholder="Type your login"
-                  className="block w-full py-3 px-1 mt-2
-                    text-gray-800 appearance-none
-                    border-b-2 border-red-600
-                    focus:text-gray-500 focus:outline-none focus:border-gray-200"
-                  value={login}
-                  onChange={onChangeLogin}
-                  required
-                />
                 <div className="text-red-500 font-semibold flex justify-center text-lg pt-1">
                   User already exist
                 </div>
-                <div className="text-gray-700 font-semibold flex justify-center text-3xl pt-1">
+                <div className="text-red-700 font-semibold flex justify-center text-2xl pt-1 pb-3">
                   Choose another name
                 </div>
               </div>

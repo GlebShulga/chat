@@ -7,26 +7,19 @@ import { subscriptionOnChannel, unsubscriptionOnChannel } from '../../redux/redu
 const SubscriptionOnChannel = (props) => {
   const history = useHistory()
   const listOfChannels = useSelector((s) => s.channels.listOfChannels)
-  const listOfUsers = useSelector((s) => s.users.listOfUsers)
-  const currentUserName = useSelector((s) => s.users.currentUserName)
+  const currentUser = useSelector((s) => s.auth.user)
 
   const dispatch = useDispatch()
 
   const subscriptionOnClick = (channelTitle) => {
-    const userId = listOfUsers.reduce(
-      (acc, rec) => (rec.userName === currentUserName ? rec.userId : acc),
-      ''
-    )
+    const userId = currentUser._id
     dispatch(subscriptionOnChannel(userId, channelTitle))
     history.push(`/${channelTitle}`)
     props.setPosition(false)
   }
 
   const unsubscriptionOnClick = (channelTitle) => {
-    const userId = listOfUsers.reduce(
-      (acc, rec) => (rec.userName === currentUserName ? rec.userId : acc),
-      ''
-    )
+    const userId = currentUser._id
     dispatch(unsubscriptionOnChannel(userId, channelTitle))
   }
 
@@ -40,25 +33,23 @@ const SubscriptionOnChannel = (props) => {
           <div className="text-gray-200 text-5xl font-bold underline grid justify-center py-5">
             Channels
           </div>
-          {listOfChannels.map((channelTitle) => {
-            const subscriptionsOfCurrentUser = listOfUsers.reduce((acc, rec) => {
-              return rec.userName === currentUserName ? rec.subscriptionOnChannels : acc
-            }, [])
-            const isButtonDisable = subscriptionsOfCurrentUser.find(
-              (subscribedChannel) => subscribedChannel !== channelTitle
+          {listOfChannels.map((channel) => {
+            const subscriptionsOfCurrentUser = currentUser.subscriptionOnChannels
+            const isAlreadySubscribed = subscriptionsOfCurrentUser.find(
+              (subscribedChannel) => subscribedChannel === channel.channelTitle
             )
             return (
               <div key="buttons" className="flex flex-row p-4 grid justify-items-center">
-                <div className="text-gray-200 text-2xl font-bold">{channelTitle}</div>
+                <div className="text-gray-200 text-2xl font-bold">{channel.channelTitle}</div>
                 <div className="flex flex-row">
                   <div className="p-2">
                     <button
                       type="button"
                       className={activeButton}
                       onClick={() => {
-                        unsubscriptionOnClick(channelTitle)
+                        unsubscriptionOnClick(channel.channelTitle)
                       }}
-                      disabled={isButtonDisable}
+                      disabled={!isAlreadySubscribed}
                     >
                       Unsubscribe
                     </button>
@@ -68,9 +59,9 @@ const SubscriptionOnChannel = (props) => {
                       type="button"
                       className={activeButton}
                       onClick={() => {
-                        subscriptionOnClick(channelTitle)
+                        subscriptionOnClick(channel.channelTitle)
                       }}
-                      disabled={isButtonDisable}
+                      disabled={isAlreadySubscribed}
                     >
                       Subscribe
                     </button>

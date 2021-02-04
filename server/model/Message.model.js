@@ -2,8 +2,8 @@ import mongoose from 'mongoose'
 
 const messageSchema = new mongoose.Schema(
   {
-    userId: Number,
-    channelId: Number,
+    userId: String,
+    channelId: String,
     messageText: String
     // metaObj: {
     //   type: String,
