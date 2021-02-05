@@ -7,8 +7,7 @@ import ButtonShowChannels from './add_show_Channels/buttonShowChannels'
 
 const Sidebar = () => {
   const currentUser = useSelector((s) => s.auth.user)
-  const currentUserSubscriptionOnChannels = currentUser.subscriptionOnChannels
-  console.log(currentUserSubscriptionOnChannels)
+  const listOfUsers = useSelector((s) => s.users.listOfUsers)
   const { channel: currenChannelTitle } = useParams()
   return (
     <div className="bg-purple-900 text-purple-300 w-1/5 pb-6 hidden md:block">
@@ -37,21 +36,25 @@ const Sidebar = () => {
           </div>
         </div>
         <div className="mb-6 py-1 px-4 text-white font-semibold">
-          {currentUserSubscriptionOnChannels.map((subscribedChannel) =>
-            currenChannelTitle === subscribedChannel ? (
-              <div key={currenChannelTitle} className="bg-green-500 py-1">
-                <div className="hover:text-gray-200">
-                  <Link to={`/${currenChannelTitle}`}>{`# ${currenChannelTitle}`}</Link>
-                </div>
-              </div>
-            ) : (
-              <div key={subscribedChannel} className="py-1">
-                <div className="hover:text-gray-400">
-                  <Link to={`/${subscribedChannel}`}>{`# ${subscribedChannel}`}</Link>
-                </div>
-              </div>
-            )
-          )}
+          {listOfUsers.reduce((acc, rec) => {
+            return rec.login === currentUser.login
+              ? rec.subscriptionOnChannels.map((subscribedChannel) =>
+                  currenChannelTitle === subscribedChannel ? (
+                    <div key={currenChannelTitle} className="bg-green-500 py-1">
+                      <div className="hover:text-gray-200">
+                        <Link to={`/${currenChannelTitle}`}>{`# ${currenChannelTitle}`}</Link>
+                      </div>
+                    </div>
+                  ) : (
+                    <div key={subscribedChannel} className="py-1">
+                      <div className="hover:text-gray-400">
+                        <Link to={`/${subscribedChannel}`}>{`# ${subscribedChannel}`}</Link>
+                      </div>
+                    </div>
+                  )
+                )
+              : acc
+          }, '')}
         </div>
       </div>
       <div className="px-4 mb-3 font-sans">Direct Messages</div>
@@ -63,15 +66,15 @@ const Sidebar = () => {
         </span>
       </div>
 
-      <div className="flex items-center mb-3 px-4">
-        <span className="bg-green-500 rounded-full block w-2 h-2 mr-2" />
-        <span className="text-purple-300">Adam Bishop</span>
-      </div>
-
-      <div className="flex items-center px-4 mb-6">
-        <span className="border rounded-full block w-2 h-2 mr-2" />
-        <span className="text-purple-300">killgt</span>
-      </div>
+      {listOfUsers.map((user) => {
+        return user.subscriptionOnChannels.indexOf(currenChannelTitle) >= 0 &&
+          user.login !== currentUser.login ? (
+          <div className="flex items-center mb-3 px-4">
+            <span className="bg-green-500 rounded-full block w-2 h-2 mr-2" />
+            <span className="text-purple-300">{user.login}</span>
+          </div>
+        ) : null
+      })}
 
       <div className="px-4 mb-3 font-sans">Applications</div>
     </div>

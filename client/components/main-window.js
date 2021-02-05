@@ -9,9 +9,9 @@ const MainWindow = () => {
     <div>
       <Head title="Chat" />
       <div className="w-full border shadow bg-white">
-        <div className="flex">
+        <div className="flex h-screen">
           <Sidebar />
-          <div className="w-full flex flex-col">
+          <div className="w-full flex flex-col relative">
             {/* <Topbar /> */}
             <Chat />
           </div>
