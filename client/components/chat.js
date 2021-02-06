@@ -68,7 +68,7 @@ const Chat = () => {
           </div>
         )
       })}
-      <div className="flex m-6 rounded-lg border-2 border-gray-200 overflow-hidden absolute inset-x-0 bottom-0 w-5/6">
+      <div className="flex m-6 rounded-lg border-2 border-gray-200 overflow-hidden absolute inset-x-0 bottom-0 w-5/6 z-0">
         <button
           type="button"
           id="btn"

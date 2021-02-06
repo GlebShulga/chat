@@ -12,7 +12,7 @@ const Channel = () => {
       <div className="w-full border shadow bg-white">
         <div className="flex h-screen">
           <Sidebar />
-          <div className="w-full flex flex-col relative">
+          <div className="w-full flex flex-col relative z-0">
             <Topbar />
             <Chat />
           </div>

@@ -1,5 +1,4 @@
 import passport from 'passport'
-// import User from '../model/User.model'
 
 const handleJWT = (req, res, next, roles) => {
   return async (err, user, info) => {

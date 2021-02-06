@@ -57,15 +57,13 @@ const Sidebar = () => {
           }, '')}
         </div>
       </div>
-      <div className="px-4 mb-3 font-sans">Direct Messages</div>
-
+      <div className="px-4 mb-3 font-sans">Users</div>
       <div className="flex items-center mb-3 px-4">
         <span className="bg-green-500 rounded-full block w-2 h-2 mr-2" />
         <span className="text-purple-300">
           {currentUser.login} <i className="text-grey-400 text-sm">(me)</i>
         </span>
       </div>
-
       {listOfUsers.map((user) => {
         return user.subscriptionOnChannels.indexOf(currenChannelTitle) >= 0 &&
           user.login !== currentUser.login ? (

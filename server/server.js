@@ -20,21 +20,21 @@ import Html from '../client/html'
 import User from './model/User.model'
 import Message from './model/Message.model'
 import Channel from './model/Channel.model'
-// import Image from './model/Image.model'
+import Image from './model/Image.model'
 
-// const fs = require('fs')
-// const multer = require('multer')
+const fs = require('fs')
+const multer = require('multer')
 
-// const upload = multer({ storage })
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads')
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.fieldname)
+  }
+})
 
-// const storage = multer.diskStorage({
-//   destination: (req, file, cb) => {
-//     cb(null, 'uploads')
-//   },
-//   filename: (req, file, cb) => {
-//     cb(null, file.fieldname)
-//   }
-// })
+const upload = multer({ storage })
 
 mongooseService.connect()
 
@@ -241,13 +241,13 @@ server.get('/api/v1/messages', (req, res) => {
 //   })
 // )
 
-// server.post('/api/v1/images', upload.single('upload'), (req, res) => {
-//   const image = new Image()
-//   image.img.data = fs.readFileSync(req.file.path)
-//   image.img.contentType = 'image/png'
-//   image.save()
-//   res.json({ file: req.file })
-// })
+server.post('/api/v1/images', upload.single('upload'), (req, res) => {
+  const image = new Image()
+  image.img.data = fs.readFileSync(req.file.path)
+  image.img.contentType = 'image/png'
+  image.save()
+  res.json({ file: req.file })
+})
 
 // server.get('/api/v1/images', (req, res) => {
 //   Image.find({}, (err, items) => {
