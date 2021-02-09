@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { addUser } from '../redux/reducers/users'
+import { addUser } from '../../redux/reducers/users'
+import Avatars from './avatars'
 
 const UserRegistration = () => {
   const error = useSelector((s) => s.users.error)
+  const avatar = useSelector((s) => s.avatars.chosenAvatar)
   const dispatch = useDispatch()
+  const [toggle, setToggle] = useState(false)
   const [login, setLogin] = useState()
   const [password, setPassword] = useState()
   const loginInputClassName =
@@ -21,7 +24,7 @@ const UserRegistration = () => {
 
   const onClick = () => {
     const hashtag = `#${login}`
-    dispatch(addUser(login, password, hashtag))
+    dispatch(addUser(login, password, hashtag, avatar))
   }
 
   return (
@@ -38,8 +41,21 @@ const UserRegistration = () => {
           <h2 className="text-center font-semibold text-3xl lg:text-4xl text-gray-800">
             Registration
           </h2>
-
-          <form className="mt-10">
+          <div className="flex justify-center p-4">
+            <button type="button" onClick={() => setToggle(!toggle)}>
+              <img
+                className="rounded-full h-32 w-32"
+                src={avatar || 'https://ssl.gstatic.com/accounts/ui/avatar_2x.png'}
+                alt="user avatar"
+              />
+            </button>
+          </div>
+          {toggle && (
+            <div className="absolute w-screen h-screen bg-gray-700 opacity-90 top-0 left-0 flex items-center justify-center z-10">
+              <Avatars setToggle={setToggle} />
+            </div>
+          )}
+          <form>
             {/* <!-- Login Input --> */}
             <label htmlFor="text" className="block text-xs font-semibold text-gray-600 uppercase">
               Login

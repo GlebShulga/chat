@@ -54,7 +54,7 @@ const ButtonAddChannel = () => {
         </svg>
       </button>
       {toggle && (
-        <div className="absolute w-screen h-screen bg-gray-700 opacity-90 top-0 left-0 flex items-center justify-center z-0">
+        <div className="absolute w-screen h-screen bg-gray-700 opacity-90 top-0 left-0 flex items-center justify-center z-10">
           <AddChannel setToggle={setToggle} />
         </div>
       )}

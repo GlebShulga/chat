@@ -20,7 +20,8 @@ const userSchema = new mongoose.Schema(
     subscriptionOnChannels: {
       type: [String],
       default: []
-    }
+    },
+    avatar: String
   },
   { timestamps: true }
 )

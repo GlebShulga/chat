@@ -30,7 +30,7 @@ export default (state = initialState, action) => {
   }
 }
 
-export function addUser(login, password, hashtag) {
+export function addUser(login, password, hashtag, avatar) {
   return (dispatch) => {
     axios({
       method: 'post',
@@ -38,7 +38,7 @@ export function addUser(login, password, hashtag) {
       headers: {
         'content-Type': 'application/json'
       },
-      data: { login, password, hashtag }
+      data: { login, password, hashtag, avatar }
     })
       .then((r) => r.data)
       .then((data) => {

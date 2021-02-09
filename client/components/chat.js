@@ -8,6 +8,7 @@ const Chat = () => {
   const listOfUsers = useSelector((s) => s.users.listOfUsers)
   const listOfChannels = useSelector((s) => s.channels.listOfChannels)
   const currentUser = useSelector((s) => s.auth.user)
+  const altOfAvatar = useSelector((s) => s.avatars.listOfAvatars)
   const dispatch = useDispatch()
   const { channel: currenChannelTitle } = useParams()
 
@@ -48,8 +49,8 @@ const Chat = () => {
                   user._id === message.userId && (
                     <div className="flex items-start mb-4">
                       <img
-                        src="https://i.imgur.com/qACoKgY.jpg"
-                        alt="men"
+                        src={user.avatar}
+                        alt={altOfAvatar.find((avatar) => avatar.src === user.avatar)}
                         className="w-10 h-10 rounded mr-3"
                       />
                       <div key={message._id} className="flex flex-col">

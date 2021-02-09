@@ -9,7 +9,7 @@ import store, { history } from '../redux'
 
 import MasterPage from '../components/master-page'
 import UserAuth from '../components/userAuth'
-import UserRegistration from '../components/userRegistration'
+import UserRegistration from '../components/registration/userRegistration'
 import NotFound from '../components/404'
 // import PrivateComponent from '../components/private-route'
 

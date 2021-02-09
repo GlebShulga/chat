@@ -20,21 +20,6 @@ import Html from '../client/html'
 import User from './model/User.model'
 import Message from './model/Message.model'
 import Channel from './model/Channel.model'
-import Image from './model/Image.model'
-
-const fs = require('fs')
-const multer = require('multer')
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads')
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.fieldname)
-  }
-})
-
-const upload = multer({ storage })
 
 mongooseService.connect()
 
@@ -146,7 +131,7 @@ server.post('/api/v1/users', async (req, res) => {
   const { login } = req.body
   const { password } = req.body
   const { hashtag } = req.body
-  // const { userImage } = req.body
+  const { avatar } = req.body
   User.findOne({ login }).then((u) => {
     if (!u) {
       const user = new User({
@@ -154,7 +139,7 @@ server.post('/api/v1/users', async (req, res) => {
         login,
         password,
         hashtag,
-        userImage: 'photo'
+        avatar
       })
       user.save()
       res.json({ status: 'ok' })
@@ -231,34 +216,6 @@ server.get('/api/v1/messages', (req, res) => {
     res.json(listOfMessages)
   })
 })
-
-// server.use(
-//   multer({
-//     dest: './uploads/',
-//     rename: (fieldname, filename) => {
-//       return filename
-//     }
-//   })
-// )
-
-server.post('/api/v1/images', upload.single('upload'), (req, res) => {
-  const image = new Image()
-  image.img.data = fs.readFileSync(req.file.path)
-  image.img.contentType = 'image/png'
-  image.save()
-  res.json({ file: req.file })
-})
-
-// server.get('/api/v1/images', (req, res) => {
-//   Image.find({}, (err, items) => {
-//     if (err) {
-//       console.log(err)
-//       res.status(500).send('An error occurred', err)
-//     } else {
-//       res.render('imagesPage', { items })
-//     }
-//   })
-// })
 
 server.use('/api/', (req, res) => {
   res.status(404)

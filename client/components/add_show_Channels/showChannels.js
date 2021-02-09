@@ -15,7 +15,7 @@ const SubscriptionOnChannel = (props) => {
     const userId = currentUser._id
     dispatch(subscriptionOnChannel(userId, channelTitle))
     history.push(`/${channelTitle}`)
-    props.setPosition(false)
+    props.setToggle(false)
   }
 
   const unsubscriptionOnClick = (channelTitle) => {
@@ -76,7 +76,7 @@ const SubscriptionOnChannel = (props) => {
               type="button"
               className="px-7 py-2 rounded-full bg-gray-300 text-gray-600 max-w-max shadow-sm hover:bg-gray-300"
               onClick={() => {
-                props.setPosition(false)
+                props.setToggle(false)
               }}
             >
               Cancel

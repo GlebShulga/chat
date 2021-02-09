@@ -16,9 +16,6 @@ const Topbar = () => {
         <h3 className="text-grey-800 text-md mb-1 font-extrabold"># {`${channelTitle}`}</h3>
         <div className="text-grey-500 font-thin text-sm">{`${channel.channelDescription}`}</div>
       </div>
-      <div className="ml-auto hidden md:block">
-        <input type="search" placeholder="Search" className="border border-grey rounded-lg p-2" />
-      </div>
     </div>
   )
 }

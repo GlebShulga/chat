@@ -4,6 +4,7 @@ import channels from './channels'
 import messages from './messages'
 import users from './users'
 import auth from './auth'
+import avatars from './avatars'
 
 const createRootReducer = (history) =>
   combineReducers({
@@ -11,7 +12,8 @@ const createRootReducer = (history) =>
     channels,
     messages,
     users,
-    auth
+    auth,
+    avatars
   })
 
 export default createRootReducer
