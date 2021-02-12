@@ -39,7 +39,10 @@ const SubscriptionOnChannel = (props) => {
               (subscribedChannel) => subscribedChannel === channel.channelTitle
             )
             return (
-              <div key="buttons" className="flex flex-row p-4 grid justify-items-center">
+              <div
+                key={`${channel._id}button`}
+                className="flex flex-row p-4 grid justify-items-center"
+              >
                 <div className="text-gray-200 text-2xl font-bold">{channel.channelTitle}</div>
                 <div className="flex flex-row">
                   <div className="p-2">

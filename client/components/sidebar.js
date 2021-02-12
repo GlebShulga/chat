@@ -10,7 +10,7 @@ const Sidebar = () => {
   const listOfUsers = useSelector((s) => s.users.listOfUsers)
   const { channel: currenChannelTitle } = useParams()
   return (
-    <div className="bg-purple-900 text-purple-300 w-1/5 pb-6 hidden md:block">
+    <div className="bg-purple-900 text-purple-300 w-1/5 pb-6">
       <h1 className="text-white text-xl mb-2 mt-3 px-4 font-sans flex justify-between">
         <span>{currenChannelTitle} channel</span>
         <svg className="h-6 w-6 text-purple-300 fill-current" viewBox="0 0 32 32">
@@ -26,8 +26,8 @@ const Sidebar = () => {
       <div>
         <div className="flex justify-between py-3">
           <div className="px-4 py-1 mb-2 font-sans">Channels</div>
-          <div className="flex justify-between flex-wrap px-3">
-            <div className="px-1">
+          <div className="flex justify-between flex-wrap px-3 hidden md:block">
+            <div className="px-1 ">
               <ButtonShowChannels />
             </div>
             <div className="px-1">
@@ -35,7 +35,7 @@ const Sidebar = () => {
             </div>
           </div>
         </div>
-        <div className="mb-6 py-1 px-4 text-white font-semibold">
+        <div className="mb-6 py-1 px-4 text-white font-semibold text-sm md:text-base">
           {listOfUsers.reduce((acc, rec) => {
             return rec.login === currentUser.login
               ? rec.subscriptionOnChannels.map((subscribedChannel) =>
@@ -57,24 +57,24 @@ const Sidebar = () => {
           }, '')}
         </div>
       </div>
-      <div className="px-4 mb-3 font-sans">Users</div>
-      <div className="flex items-center mb-3 px-4">
-        <span className="bg-green-500 rounded-full block w-2 h-2 mr-2" />
-        <span className="text-purple-300">
-          {currentUser.login} <i className="text-grey-400 text-sm">(me)</i>
-        </span>
+      <div className="hidden md:block">
+        <div className="px-4 mb-3 font-sans">Users</div>
+        <div className="flex items-center mb-3 px-4">
+          <span className="bg-green-500 rounded-full block w-2 h-2 mr-2" />
+          <span className="text-purple-300">
+            {currentUser.login} <i className="text-grey-400 text-sm">(me)</i>
+          </span>
+        </div>
+        {listOfUsers.map((user) => {
+          return user.subscriptionOnChannels.indexOf(currenChannelTitle) >= 0 &&
+            user.login !== currentUser.login ? (
+            <div className="flex items-center mb-3 px-4">
+              <span className="bg-green-500 rounded-full block w-2 h-2 mr-2" />
+              <span className="text-purple-300">{user.login}</span>
+            </div>
+          ) : null
+        })}
       </div>
-      {listOfUsers.map((user) => {
-        return user.subscriptionOnChannels.indexOf(currenChannelTitle) >= 0 &&
-          user.login !== currentUser.login ? (
-          <div className="flex items-center mb-3 px-4">
-            <span className="bg-green-500 rounded-full block w-2 h-2 mr-2" />
-            <span className="text-purple-300">{user.login}</span>
-          </div>
-        ) : null
-      })}
-
-      <div className="px-4 mb-3 font-sans">Applications</div>
     </div>
   )
 }

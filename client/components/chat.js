@@ -17,12 +17,15 @@ const Chat = () => {
     setMessageText(e.target.value)
   }
   const onClick = () => {
-    const currentUserId = currentUser._id
-    const currentChannelId = listOfChannels.reduce(
-      (acc, rec) => (rec.channelTitle === currenChannelTitle ? rec._id : acc),
-      ''
-    )
-    dispatch(addMessage(messageText, currentChannelId, currentUserId))
+    if (messageText) {
+      const currentUserId = currentUser._id
+      const currentChannelId = listOfChannels.reduce(
+        (acc, rec) => (rec.channelTitle === currenChannelTitle ? rec._id : acc),
+        ''
+      )
+      dispatch(addMessage(messageText, currentChannelId, currentUserId))
+      setMessageText('')
+    }
   }
 
   const handleKeypress = (e) => {
@@ -35,7 +38,7 @@ const Chat = () => {
     <div>
       {listOfUsers.map((user) => {
         return (
-          <div key={user._id} className="px-6 py-4 flex-1 overflow-scroll-x">
+          <div key={`${user._id}chat`} className="px-6 py-4 flex-1 overflow-scroll-x">
             {listOfMessages
               .sort((a, b) => a.createdAt - b.createdAt)
               .map((message) => {
@@ -53,13 +56,13 @@ const Chat = () => {
                         alt={altOfAvatar.find((avatar) => avatar.src === user.avatar)}
                         className="w-10 h-10 rounded mr-3"
                       />
-                      <div key={message._id} className="flex flex-col">
+                      <div key={`${message._id}chat`} className="flex flex-col">
                         <div className="flex items-end">
                           <span className="font-bold text-md mr-2 font-sans">{user.login}</span>
                           <span className="text-grey text-xs font-light">{correctTime}</span>
                         </div>
                         <p className="font-light text-md text-grey-darkest pt-1">
-                          <div>{message.messageText}</div>
+                          <span>{message.messageText}</span>
                         </p>
                       </div>
                     </div>

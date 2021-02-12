@@ -47,16 +47,17 @@ export function addChannel(creatorId, channelTitle, channelDescription) {
       })
       .then(() => {
         const store = getState()
-        const { user } = store.auth
+        const { listOfUsers } = store.users
         const _id = creatorId
         const subscriptionOnChannels = channelTitle
-        const newUserSubscriptions =
+        const newUserSubscriptions = listOfUsers.map((user) =>
           user._id === _id
             ? {
                 ...user,
                 subscriptionOnChannels: [...user.subscriptionOnChannels, subscriptionOnChannels]
               }
             : user
+        )
         dispatch({ type: SUBSCRIPTION_ON_CHANNEL, listOfUsers: newUserSubscriptions })
         axios({
           method: 'patch',

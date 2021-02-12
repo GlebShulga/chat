@@ -23,7 +23,7 @@ const ButtonShowChannels = () => {
 
   return (
     <div>
-      <div className="absolute mb-10 ml-10">
+      <div className="absolute mb-10 ml-10 z-10">
         <div
           id="tooltipShow"
           className="bg-black text-white text-xs font-bold rounded py-1 px-4 right-0 bottom-full hidden"
