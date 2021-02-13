@@ -38,7 +38,7 @@ const Chat = () => {
     <div>
       {listOfUsers.map((user) => {
         return (
-          <div key={`${user._id}chat`} className="px-6 py-4 flex-1 overflow-scroll-x">
+          <div key={user._id} className="px-6 py-4 flex-1 overflow-scroll-x">
             {listOfMessages
               .sort((a, b) => a.createdAt - b.createdAt)
               .map((message) => {
@@ -56,7 +56,7 @@ const Chat = () => {
                         alt={altOfAvatar.find((avatar) => avatar.src === user.avatar)}
                         className="w-10 h-10 rounded mr-3"
                       />
-                      <div key={`${message._id}chat`} className="flex flex-col">
+                      <div key={message._id} className="flex flex-col">
                         <div className="flex items-end">
                           <span className="font-bold text-md mr-2 font-sans">{user.login}</span>
                           <span className="text-grey text-xs font-light">{correctTime}</span>
