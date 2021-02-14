@@ -50,13 +50,13 @@ const Chat = () => {
                 return (
                   currentChannelId === message.channelId &&
                   user._id === message.userId && (
-                    <div className="flex items-start mb-4">
+                    <div key={message._id} className="flex items-start mb-4">
                       <img
                         src={user.avatar}
                         alt={altOfAvatar.find((avatar) => avatar.src === user.avatar)}
                         className="w-10 h-10 rounded mr-3"
                       />
-                      <div key={message._id} className="flex flex-col">
+                      <div className="flex flex-col">
                         <div className="flex items-end">
                           <span className="font-bold text-md mr-2 font-sans">{user.login}</span>
                           <span className="text-grey text-xs font-light">{correctTime}</span>
