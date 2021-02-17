@@ -26,7 +26,7 @@ const SubscriptionOnChannel = (props) => {
   const activeButton =
     'bg-transparent hover:bg-grey text-grey-dark font-semibold hover:text-white py-2 px-4 border border-grey hover:border-transparent rounded mr-2'
   return (
-    <div сlassName="opacity-100 z-0">
+    <div className="opacity-100 z-0">
       <Head title="Channel's list" />
       <div className="grid justify-items-center">
         <div className="flex flex-col pt-3">
