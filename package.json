@@ -13,7 +13,7 @@
         "start": "cross-env NODE_ENV=production && node start.js",
         "clean": "rimraf dist",
         "lint": "eslint ./client/**/**.js ./server/**/**.js ",
-        "prettier": "prettier ./client/**/**.js ./server/**/**.js --write ",
+        "prettier": "prettier './client/**/*.js' './server/**/*.js' --write ",
         "lint:server": "eslint ./server/**/**.js",
         "test": "jest",
         "test:watch": "jest --watch",
