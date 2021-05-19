@@ -66,13 +66,15 @@ const Sidebar = () => {
           </span>
         </div>
         {listOfUsers.map((user) => {
-          return user.subscriptionOnChannels.indexOf(currenChannelTitle) >= 0 &&
-            user.login !== currentUser.login ? (
-            <div className="flex items-center mb-3 px-4">
-              <span className="bg-green-500 rounded-full block w-2 h-2 mr-2" />
-              <span className="text-purple-300">{user.login}</span>
-            </div>
-          ) : null
+          return (
+            user.subscriptionOnChannels.indexOf(currenChannelTitle) >= 0 &&
+            user.login !== currentUser.login && (
+              <div className="flex items-center mb-3 px-4">
+                <span className="bg-green-500 rounded-full block w-2 h-2 mr-2" />
+                <span className="text-purple-300">{user.login}</span>
+              </div>
+            )
+          )
         })}
       </div>
     </div>
