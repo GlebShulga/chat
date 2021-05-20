@@ -1,6 +1,11 @@
 /* purgecss start ignore */
 @tailwind  base;
 @tailwind  components;
-/* purgecss end ignore */
-
 @tailwind utilities;
+
+@layer components {
+  .activeButtonShowChannels {
+    @apply bg-transparent hover:bg-gray-500 text-gray-50 font-semibold hover:text-white py-2 px-4 border border-gray-50 hover:border-transparent rounded mr-2;
+  }
+}
+/* purgecss end ignore */

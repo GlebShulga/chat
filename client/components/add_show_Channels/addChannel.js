@@ -19,7 +19,7 @@ const AddChannel = (props) => {
   const onChangeDescription = (e) => {
     setChannelDescription(e.target.value)
   }
-  const onClick = () => {
+  const onClickAddChannel = () => {
     if (listOfChannels.indexOf(channelTitle) === -1) {
       dispatch(addChannel(creatorId, channelTitle, channelDescription))
       dispatch(subscriptionOnChannel(creatorId, channelTitle))
@@ -77,7 +77,7 @@ const AddChannel = (props) => {
           <button
             type="button"
             className="px-7 py-2 rounded-full bg-gray-300 text-gray-600 max-w-max shadow-sm hover:shadow-md"
-            onClick={onClick}
+            onClick={onClickAddChannel}
           >
             Add channel
           </button>

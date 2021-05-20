@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { addMessage } from '../redux/reducers/messages'
@@ -16,7 +16,7 @@ const Chat = () => {
   const onChange = (e) => {
     setMessageText(e.target.value)
   }
-  const onClick = () => {
+  const onClickSendMessage = useCallback(() => {
     if (messageText) {
       const currentUserId = currentUser._id
       const currentChannelId = listOfChannels.reduce(
@@ -26,11 +26,16 @@ const Chat = () => {
       dispatch(addMessage(messageText, currentChannelId, currentUserId))
       setMessageText('')
     }
-  }
+  }, [messageText, currentUser._id, listOfChannels, currenChannelTitle])
+
+  const currentChannelId = listOfChannels.reduce(
+    (acc, rec) => (rec.channelTitle === currenChannelTitle ? rec._id : acc),
+    ''
+  )
 
   const handleKeypress = (e) => {
     if (e.key === 'Enter') {
-      onClick()
+      onClickSendMessage()
     }
   }
 
@@ -43,10 +48,6 @@ const Chat = () => {
               .sort((a, b) => a.createdAt - b.createdAt)
               .map((message) => {
                 const correctTime = new Date(message.createdAt).toLocaleString()
-                const currentChannelId = listOfChannels.reduce(
-                  (acc, rec) => (rec.channelTitle === currenChannelTitle ? rec._id : acc),
-                  ''
-                )
                 return (
                   currentChannelId === message.channelId &&
                   user._id === message.userId && (
@@ -77,7 +78,7 @@ const Chat = () => {
           type="button"
           id="btn"
           className="text-3xl px-3 border-r-2 border-grey hover:bg-gray-200 active:shadow-lg mouse shadow transition ease-in duration-200 focus:outline-none"
-          onClick={onClick}
+          onClick={onClickSendMessage}
         >
           +
         </button>
