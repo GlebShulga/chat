@@ -11,8 +11,6 @@ const UserRegistration = () => {
   const [toggle, setToggle] = useState(false)
   const [login, setLogin] = useState()
   const [password, setPassword] = useState()
-  const loginInputClassName =
-    'block w-full py-3 px-1 mt-2 text-gray-800 appearance-none border-b-2 border-gray-100 focus:text-gray-500 focus:outline-none focus:border-gray-200'
 
   const onChangeLogin = (e) => {
     setLogin(e.target.value)
@@ -63,7 +61,9 @@ const UserRegistration = () => {
             <input
               type="text"
               placeholder="Type your login"
-              className={error ? loginInputClassName.concat('border-red-600') : loginInputClassName}
+              className={
+                error ? 'loginInputClassName'.concat('border-red-600') : 'loginInputClassName'
+              }
               value={login}
               onChange={onChangeLogin}
               required

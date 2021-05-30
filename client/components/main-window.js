@@ -12,7 +12,7 @@ const MainWindow = () => {
         <div className="flex h-screen">
           <Sidebar />
           <div className="w-full flex flex-col flex items-center p-6">
-            <div className="text-4xl font-medium">Welcome to the chat</div>
+            <div className="text-2xl lg:text-4xl font-medium">Welcome to the chat</div>
             <div className="text-lg">Choose one of the channels and begin conversation</div>
           </div>
         </div>

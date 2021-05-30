@@ -5,14 +5,15 @@ import { Link, useParams } from 'react-router-dom'
 import ButtonAddChannel from './add_show_Channels/buttonAddChannel'
 import ButtonShowChannels from './add_show_Channels/buttonShowChannels'
 // import bell from '../assets/images/bell.svg'
+// import Glyphicon from '../assets/fonts/fa-solid-900.svg'
 
 const Sidebar = () => {
   const currentUser = useSelector((s) => s.auth.user)
   const listOfUsers = useSelector((s) => s.users.listOfUsers)
   const { channel: currenChannelTitle } = useParams()
   return (
-    <div className="bg-purple-900 text-purple-300 w-1/5 pb-6">
-      <h1 className="text-white text-xl mb-2 mt-3 px-4 font-sans flex justify-between">
+    <div className="bg-purple-900 text-purple-300 w-1/4 md:w-1/5 pb-6">
+      <h1 className="text-white text-base lg:text-xl mb-2 mt-3 px-4 font-sans flex justify-between">
         <span>{currenChannelTitle} channel</span>
         <svg className="h-6 w-6 text-purple-300 fill-current" viewBox="0 0 32 32">
           <g id="surface1">
@@ -26,9 +27,9 @@ const Sidebar = () => {
         <span className="text-purple-300">{currentUser.login}</span>
       </div>
       <div>
-        <div className="flex justify-between py-3">
+        <div className="flex justify-between py-3 flex-wrap">
           <div className="px-4 py-1 mb-2 font-sans">Channels</div>
-          <div className="flex justify-between flex-wrap px-3 hidden md:block">
+          <div className="flex justify-between lg:flex-wrap px-3 lg:block">
             <div className="px-1 ">
               <ButtonShowChannels />
             </div>
