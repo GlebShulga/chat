@@ -26,7 +26,7 @@ mongooseService.connect()
 require('colors')
 
 const { default: Root } = require('../dist/assets/js/ssr/root.bundle')
-// console.log('SSR not found. Please run "yarn run build:ssr"'.red)
+// console.log('SSR not found. Please run "npm run build:ssr"'.red)
 
 const templateUser = {
   login: '',
