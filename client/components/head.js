@@ -16,7 +16,7 @@ Head.propTypes = {
 }
 
 Head.defaultProps = {
-  title: 'ToDo list'
+  title: 'Chat'
 }
 
 export default Head
