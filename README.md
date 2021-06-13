@@ -1,6 +1,13 @@
 # MERN Chat
 Slack/Discord clone application.
 
+## Key Features
+
+- Registration / Login
+- Subscribe for channels / Creat new channel
+- Send message to channel
+- Fully Responsive
+
 ## How to use it?
 Install modules:
 npm install
