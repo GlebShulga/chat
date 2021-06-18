@@ -23,22 +23,12 @@ console.log(date - (date % (1000 * 60 * 30)))
 const config = {
   optimization: {
     minimize: true,
-    minimizer: [
-      new TerserJSPlugin({ parallel: true }),
-      new OptimizeCSSAssetsPlugin({
-        cssProcessor: require('cssnano'),
-        cssProcessorPluginOptions: {
-          preset: ['default', { discardComments: { removeAll: true } }]
-        }
-      })
-    ]
+    minimizer: [new TerserJSPlugin({ parallel: true })]
   },
   entry: {
     main: './main.js'
   },
   resolve: {
-
-
     alias: {
       d3: 'd3/index.js',
       './setPrototypeOf': './setPrototypeOf.js',
@@ -153,8 +143,8 @@ const config = {
           {
             loader: 'file-loader',
             options: {
-              name: '[name].[ext]',
-              outputPath: 'fonts/'
+              name: '[name].[hash].[ext]',
+              outputPath: 'images/'
             }
           },
           {
@@ -174,7 +164,6 @@ const config = {
     new CopyWebpackPlugin(
       {
         patterns: [
-
           { from: 'assets/images', to: 'images' },
           { from: 'assets/fonts', to: 'fonts' },
           { from: 'assets/manifest.json', to: 'manifest.json' },
