@@ -40,14 +40,14 @@ const Chat = () => {
   }
 
   return (
-    <div>
-      {listOfUsers.map((user) => {
-        return (
-          <div key={user._id} className="px-6 py-4 flex-1 overflow-scroll-x">
-            {listOfMessages
-              .sort((a, b) => a.createdAt - b.createdAt)
-              .map((message) => {
-                const correctTime = new Date(message.createdAt).toLocaleString()
+    <div className="px-6 py-4 flex-1 overflow-scroll-x">
+      {listOfMessages
+        .sort((a, b) => a.createdAt - b.createdAt)
+        .map((message) => {
+          const correctTime = new Date(message.createdAt).toLocaleString()
+          return (
+            <div key={message._id} className="">
+              {listOfUsers.map((user) => {
                 return (
                   currentChannelId === message.channelId &&
                   user._id === message.userId && (
@@ -70,9 +70,9 @@ const Chat = () => {
                   )
                 )
               })}
-          </div>
-        )
-      })}
+            </div>
+          )
+        })}
       <div className="flex m-6 rounded-lg border-2 border-gray-200 overflow-hidden absolute inset-x-0 bottom-0 w-5/6 z-0">
         <button
           type="button"
@@ -86,7 +86,7 @@ const Chat = () => {
           type="text"
           className="w-full px-4"
           placeholder={`Message to # ${currenChannelTitle}`}
-          value={messageText}
+          value={messageText || ''}
           onChange={onChange}
           onKeyPress={handleKeypress}
         />
