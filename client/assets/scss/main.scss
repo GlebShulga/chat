@@ -22,6 +22,15 @@
   .avatar {
     @apply w-10 h-10 rounded mr-3
   }
+  .sidebarMD {
+    @apply w-full absolute h-screen bg-purple-900 text-purple-300
+  }
+  .sidebarSM {
+    @apply visible w-screen absolute h-screen bg-purple-900 text-purple-300
+  }
+  .mediumSans {
+    @apply font-sans font-medium
+  }
 }
 
 @layer utilities {
