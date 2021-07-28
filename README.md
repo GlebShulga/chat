@@ -23,3 +23,19 @@ npm run watch:client
 
 Build a project:
 npm run build:client
+
+## The stack
+
+### Back
+
+- Node.js
+- Express.js
+- MongoDB
+- Socket.io
+
+### Front
+
+- React
+- Redux/Redux-Thunk
+- Axios
+- Tailwind CSS
