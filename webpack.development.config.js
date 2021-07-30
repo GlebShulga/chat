@@ -54,11 +54,11 @@ const config = {
     },
     proxy: [
       {
-        context: ['/api', '/auth', '/ws', '/favicon.ico'],
-        target: 'http://0.0.0.0:8090',
+        context: ['/api', '/auth', '/ws', '/socket.io', 'favicon.ico'],
+        target: `http://localhost:${process.env.PORT || 8090}`,
         secure: false,
         changeOrigin: true,
-        ws: !!process.env.ENABLE_SOCKETS
+        ws: process.env.ENABLE_SOCKETS || false
       }
     ]
   },
@@ -223,7 +223,8 @@ const config = {
         (res, key) => ({ ...res, [key]: JSON.stringify(process.env[key]) }),
         {
           APP_VERSION: JSON.stringify(APP_VERSION),
-          'windows.process': { cwd: () => '' }
+          'windows.process': { cwd: () => '' },
+          ENABLE_SOCKETS: JSON.stringify(process.env.ENABLE_SOCKETS || false)
         }
       )
     )
