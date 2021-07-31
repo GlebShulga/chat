@@ -31,6 +31,12 @@
   .mediumSans {
     @apply font-sans font-medium
   }
+  .avatarImg {
+    @apply transition duration-500 ease-in-out transform hover:-translate-y-1
+  }
+  .userStatusDot {
+    @apply rounded-full block w-2 h-2 mr-2
+  }
 }
 
 @layer utilities {
