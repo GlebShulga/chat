@@ -2,7 +2,7 @@ import express from 'express'
 import path from 'path'
 import cors from 'cors'
 import bodyParser from 'body-parser'
-import sockjs from 'sockjs'
+// import sockjs from 'sockjs'
 import { renderToStaticNodeStream } from 'react-dom/server'
 import React from 'react'
 
@@ -25,9 +25,6 @@ mongooseService.connect()
 
 require('colors')
 
-const { default: Root } = require('../dist/assets/js/ssr/root.bundle')
-// console.log('SSR not found. Please run "npm run build:ssr"'.red)
-
 const templateUser = {
   login: '',
   password: '',
@@ -40,13 +37,19 @@ const templateMessage = {
   userId: '',
   channelId: '',
   messageText: '',
-  metaObj: {}
+  messageTime: ''
 }
 
-let connections = []
+const connections = []
 
 const port = process.env.PORT || 8090
 const server = express()
+
+const http = require('http').createServer(server)
+const io = require('socket.io')(http)
+
+const { default: Root } = require('../dist/assets/js/ssr/root.bundle')
+// console.log('SSR not found. Please run "npm run build:ssr"'.red)
 
 const middleware = [
   cors(),
@@ -73,7 +76,6 @@ server.get('/api/v1/auth', async (req, res) => {
   try {
     const jwtUser = jwt.verify(req.cookies.token, config.secret)
     const user = await User.findById(jwtUser.uid)
-
     const payload = { uid: user._id }
     const token = jwt.sign(payload, config.secret, { expiresIn: '48h' })
     delete user.password
@@ -199,11 +201,13 @@ server.post('/api/v1/messages', async (req, res) => {
   const { messageText } = req.body
   const { channelId } = req.body
   const { userId } = req.body
+  const { messageTime } = req.body
   const message = new Message({
     ...templateMessage,
     userId,
     channelId,
-    messageText
+    messageText,
+    messageTime
   })
   message.save()
   Message.find({}).then((listOfMessages) => {
@@ -224,7 +228,7 @@ server.use('/api/', (req, res) => {
 
 const [htmlStart, htmlEnd] = Html({
   body: 'separator',
-  title: 'Boilerplate'
+  title: 'Chat'
 }).split('separator')
 
 server.get('/', (req, res) => {
@@ -247,18 +251,60 @@ server.get('/*', (req, res) => {
   })
 })
 
-const app = server.listen(port)
+http.listen(port, () => {
+  console.log(`listening on *:${port}`)
+})
 
-if (config.isSocketsEnabled) {
-  const echo = sockjs.createServer()
-  echo.on('connection', (conn) => {
-    connections.push(conn)
-    conn.on('data', async () => {})
+let onlineUsers = []
+let onlineUsersInfo = []
 
-    conn.on('close', () => {
-      connections = connections.filter((c) => c.readyState !== 3)
+io.on('connection', async function (socket) {
+  const { token } = socket.handshake.auth
+  const jwtUser = jwt.verify(token, config.secret)
+
+  const user = await User.findById(jwtUser.uid)
+  console.log(`${user.login} connected, id:${socket.id}`)
+  onlineUsers.push(user.login)
+
+  socket.on('Join chat', (activeChannel) => {
+    const userInfo = {
+      id: socket.id,
+      room: activeChannel
+    }
+    io?.emit('Online users', onlineUsers)
+    onlineUsersInfo.push(userInfo)
+  })
+
+  socket.on('Update Online Users Info', (activeChannel) => {
+    console.log(`${socket.id} went into the room ${activeChannel}`)
+    onlineUsersInfo.map((it) => {
+      if (it.id === socket.id) {
+        // eslint-disable-next-line no-param-reassign
+        it.room = activeChannel
+      }
+      return it
     })
   })
-  echo.installHandlers(app, { prefix: '/ws' })
+
+  socket.on('chat message', (data) => {
+    const userInCurrentRoom = onlineUsersInfo.filter((it) => it.room === data.room)
+    console.log(`message ${data.messageText} from ${data.userId} to #${data.room} `)
+    userInCurrentRoom.forEach((it) => {
+      io.to(`${it.id}`)?.emit('chat message', data)
+    })
+    console.log('Users are in the room:', userInCurrentRoom)
+  })
+
+  socket.on('disconnect', () => {
+    onlineUsers = onlineUsers.filter((it) => it !== user.login)
+    onlineUsersInfo = onlineUsersInfo.filter((it) => it.id !== socket.id)
+    console.log(`${user.login} disconnected`)
+    io?.emit('Online users', onlineUsers)
+  })
+})
+
+export default function getConnections() {
+  return connections
 }
+
 console.log(`Serving at http://localhost:${port}`)
