@@ -2,15 +2,13 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import { routerMiddleware } from 'connected-react-router'
 import thunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
-import SockJS from 'sockjs-client'
-
+import io from 'socket.io-client'
 import rootReducer from './reducers'
 import createHistory from './history'
-import socketActions from './sockets'
+import { updatelistOfMessagesFromSocket } from './reducers/messages'
+import { updateOnlineUsers } from './reducers/channels'
 
 export const history = createHistory()
-
-const isBrowser = typeof window !== 'undefined'
 
 const initialState = {}
 const enhancers = []
@@ -23,31 +21,26 @@ const composedEnhancers = composeFunc(applyMiddleware(...middleware), ...enhance
 const store = createStore(rootReducer(history), initialState, composedEnhancers)
 let socket
 
-if (typeof ENABLE_SOCKETS !== 'undefined' && ENABLE_SOCKETS) {
-  const initSocket = () => {
-    socket = new SockJS(`${isBrowser ? window.location.origin : 'http://localhost'}/ws`)
-
-    socket.onopen = () => {
-      store.dispatch(socketActions.connected)
+export function createSocket(token) {
+  socket = io(window?.location?.origin, {
+    reconnection: true,
+    reconnectionDelay: 500,
+    autoConnect: true,
+    reconnectionAttempts: 50,
+    auth: {
+      token
     }
+  })
 
-    socket.onmessage = (message) => {
-      // eslint-disable-next-line no-console
-      console.log(message)
+  socket.on('chat message', function (data) {
+    store.dispatch(updatelistOfMessagesFromSocket(data))
+  })
 
-      // socket.close();
-    }
-
-    socket.onclose = () => {
-      store.dispatch(socketActions.disconnected)
-      setTimeout(() => {
-        initSocket()
-      }, 2000)
-    }
-  }
-
-  initSocket()
+  socket.on('Online users', function (data) {
+    store.dispatch(updateOnlineUsers(data))
+  })
 }
+
 export function getSocket() {
   return socket
 }

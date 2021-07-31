@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import Head from '../head'
+import Head from '../Head'
 import { addChannel } from '../../redux/reducers/channels'
 import { subscriptionOnChannel } from '../../redux/reducers/users'
 
@@ -86,7 +86,5 @@ const AddChannel = (props) => {
     </div>
   )
 }
-
-AddChannel.propTypes = {}
 
 export default React.memo(AddChannel)

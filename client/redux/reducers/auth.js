@@ -1,10 +1,11 @@
 import Cookies from 'universal-cookie'
-import { history } from '..'
+import { history, createSocket } from '..'
 
 const UPDATE_LOGIN = 'UPDATE_LOGIN'
 const UPDATE_PASSWORD = 'UPDATE_PASSWORD'
 const LOGIN = 'LOGIN'
 const SET_ERROR = 'SET_ERROR'
+const SET_ALREADY_SIGNIN = 'SET_ALREADY_SIGNIN'
 
 const cookies = new Cookies()
 const initialState = {
@@ -12,7 +13,8 @@ const initialState = {
   password: '',
   token: cookies.get('token'),
   user: {},
-  error: null
+  error: null,
+  isAlredySignIn: localStorage.getItem('isAlredySignIn') ?? false
 }
 
 export default (state = initialState, action) => {
@@ -28,6 +30,9 @@ export default (state = initialState, action) => {
     }
     case SET_ERROR: {
       return { ...state, error: action.error }
+    }
+    case SET_ALREADY_SIGNIN: {
+      return { ...state, isAlredySignIn: action.isAlredySignIn }
     }
     default:
       return state
@@ -57,13 +62,20 @@ export function tryGetUserInfo() {
   }
 }
 
-export function trySignIn() {
-  return (dispatch) => {
+export function trySignIn(IsSignIn) {
+  return (dispatch, getState) => {
+    const store = getState()
+    const isAlredySignIn = store.auth
     fetch('/api/v1/auth')
       .then((r) => r.json())
       .then((data) => {
         dispatch({ type: LOGIN, token: data.token, user: data.user })
-        history.push('/main')
+        dispatch({ type: SET_ALREADY_SIGNIN, isAlredySignIn: IsSignIn })
+        window.localStorage.setItem('isAlredySignIn', IsSignIn)
+        if (!isAlredySignIn) {
+          history.push('/main')
+        }
+        createSocket(data.token)
       })
   }
 }
@@ -85,6 +97,7 @@ export function singIn() {
       .then((data) => {
         dispatch({ type: LOGIN, token: data.token, user: data.user })
         history.push('/main')
+        createSocket(data.token)
       })
       .catch(() => dispatch({ type: SET_ERROR, error: 'Login or password is not correct' }))
   }

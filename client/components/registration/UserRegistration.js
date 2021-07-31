@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { addUser } from '../../redux/reducers/users'
-import Avatars from './avatars'
+import Avatars from './Avatars'
 
 const UserRegistration = () => {
   const error = useSelector((s) => s.users.error)
@@ -61,9 +61,7 @@ const UserRegistration = () => {
             <input
               type="text"
               placeholder="Type your login"
-              className={
-                error ? 'loginInputClassName'.concat('border-red-600') : 'loginInputClassName'
-              }
+              className={error ? 'loginInput border-red-600' : 'loginInput'}
               value={login}
               onChange={onChangeLogin}
               required
@@ -121,7 +119,5 @@ const UserRegistration = () => {
     </div>
   )
 }
-
-UserRegistration.propTypes = {}
 
 export default React.memo(UserRegistration)

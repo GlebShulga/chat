@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Provider, useSelector } from 'react-redux'
@@ -7,18 +6,21 @@ import { Switch, Route, Redirect, StaticRouter } from 'react-router-dom'
 
 import store, { history } from '../redux'
 
-import MasterPage from '../components/master-page'
-import UserAuth from '../components/userAuth'
-import UserRegistration from '../components/registration/userRegistration'
+import MasterPage from '../components/Master-page'
+import UserAuth from '../components/UserAuth'
+import UserRegistration from '../components/registration/UserRegistration'
 import NotFound from '../components/404'
-// import PrivateComponent from '../components/private-route'
 
 import Startup from './startup'
 
 const OnlyAnonymousRoute = ({ component: Component, ...rest }) => {
   const auth = useSelector((s) => s.auth)
   const func = (props) =>
-    !!auth.user && !!rest.token ? <Redirect to={{ pathname: '/main' }} /> : <Component {...props} />
+    !!auth.user && !!rest.token ? (
+      <Redirect to={{ pathname: '/login' }} />
+    ) : (
+      <Component {...props} />
+    )
   return <Route {...rest} render={func} />
 }
 
@@ -77,7 +79,6 @@ const RootComponent = (props) => {
             <Route exact path="/" component={() => <UserAuth />} />
             <PrivateRoute exact path="/main" component={() => <MasterPage />} />
             <PrivateRoute exact path="/:channel" component={() => <MasterPage />} />
-            {/* <PrivateRoute exact path="/private" component={() => <PrivateComponent />} /> */}
             <Route component={() => <NotFound />} />
           </Switch>
         </Startup>

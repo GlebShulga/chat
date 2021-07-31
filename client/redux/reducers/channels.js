@@ -1,15 +1,20 @@
 import axios from 'axios'
+import { getSocket } from '../index'
 import { SUBSCRIPTION_ON_CHANNEL } from './users'
 
 const ADD_CHANNEL = 'ADD_CHANNEL'
 const GET_CHANNEL = 'GET_CHANNEL'
 const GET_CHANNEL_LIST = 'GET_CHANNEL_LIST'
 const SET_ERROR = 'SET_ERROR'
+const UPDATE_ACTIVE_CHANNEL = 'UPDATE_ACTIVE_CHANNEL'
+const UPDATE_ONLINE_USERS = 'UPDATE_ONLINE_USERS'
 
 const initialState = {
   listOfChannels: [],
   channel: {},
-  error: null
+  error: null,
+  activeChannel: '',
+  onlineUsers: []
 }
 
 export default (state = initialState, action) => {
@@ -26,6 +31,12 @@ export default (state = initialState, action) => {
     }
     case SUBSCRIPTION_ON_CHANNEL: {
       return { ...state, listOfUsers: action.listOfUsers }
+    }
+    case UPDATE_ACTIVE_CHANNEL: {
+      return { ...state, activeChannel: action.data }
+    }
+    case UPDATE_ONLINE_USERS: {
+      return { ...state, onlineUsers: action.data }
     }
     default:
       return state
@@ -83,5 +94,25 @@ export function getChannelsList() {
         dispatch({ type: GET_CHANNEL_LIST, listOfChannels })
       })
       .catch(() => dispatch({ type: GET_CHANNEL_LIST, listOfChannels: [] }))
+  }
+}
+
+export function updateActiveChannels(data) {
+  return { type: UPDATE_ACTIVE_CHANNEL, data }
+}
+
+export function userJoinToChat(data) {
+  return function () {
+    getSocket()?.emit('Join chat', data)
+  }
+}
+
+export function updateOnlineUsers(data) {
+  return { type: UPDATE_ONLINE_USERS, data }
+}
+
+export function updateOnlineUsersInfo(data) {
+  return function () {
+    getSocket()?.emit('Update Online Users Info', data)
   }
 }

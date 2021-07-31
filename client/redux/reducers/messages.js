@@ -46,11 +46,6 @@ export function addMessage(messageText, channelId, userId, messageTime) {
         messageTime
       })
     })
-    // .then(() =>
-    //   axios(`/api/v1/messages`).then(({ data: listOfMessages }) => {
-    //     dispatch({ type: GET_MESSAGES_LIST, listOfMessages })
-    //   })
-    // )
   }
 }
 

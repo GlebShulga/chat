@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import SubscriptionOnChannel from './showChannels'
+import SubscriptionOnChannel from './ShowChannels'
 
 const ButtonShowChannels = () => {
   const [toggle, setToggle] = useState(false)
@@ -67,7 +67,5 @@ const ButtonShowChannels = () => {
     </div>
   )
 }
-
-ButtonShowChannels.propTypes = {}
 
 export default React.memo(ButtonShowChannels)

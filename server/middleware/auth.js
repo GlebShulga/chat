@@ -15,14 +15,16 @@ const handleJWT = (req, res, next, roles) => {
   }
 }
 
-const auth = (roles = []) => (req, res, next) => {
-  return passport.authenticate(
-    'jwt',
-    {
-      session: true
-    },
-    handleJWT(req, res, next, roles)
-  )(req, res, next)
-}
+const auth =
+  (roles = []) =>
+  (req, res, next) => {
+    return passport.authenticate(
+      'jwt',
+      {
+        session: true
+      },
+      handleJWT(req, res, next, roles)
+    )(req, res, next)
+  }
 
 export default auth

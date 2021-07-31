@@ -12,11 +12,10 @@ const Sidebar = () => {
   const dispatch = useDispatch()
   const currentUser = useSelector((s) => s.auth.user)
   const listOfUsers = useSelector((s) => s.users.listOfUsers)
-  const listOfChannels = useSelector((s) => s.channels.listOfChannels)
+  const { listOfChannels, onlineUsers } = useSelector((s) => s.channels)
   const { channel: currenChannelTitle } = useParams()
 
   const [isSidebar, setIsSidebar] = useState(false)
-  console.log(isSidebar, 'isSidebar')
 
   const showSidebar = () => setIsSidebar(!isSidebar)
 
@@ -104,7 +103,13 @@ const Sidebar = () => {
               user.subscriptionOnChannels.indexOf(currenChannelTitle) >= 0 &&
               user.login !== currentUser.login && (
                 <div key={user._id} className="flex items-center mb-3 px-4">
-                  <span className="bg-green-500 rounded-full block w-2 h-2 mr-2" />
+                  <span
+                    className={
+                      onlineUsers.includes(user.login)
+                        ? 'bg-green-500 userStatusDot'
+                        : 'bg-gray-500 userStatusDot'
+                    }
+                  />
                   <span className="text-purple-300">{user.login}</span>
                 </div>
               )

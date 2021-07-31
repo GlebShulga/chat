@@ -103,6 +103,4 @@ const UserAuth = () => {
   )
 }
 
-UserAuth.propTypes = {}
-
 export default React.memo(UserAuth)

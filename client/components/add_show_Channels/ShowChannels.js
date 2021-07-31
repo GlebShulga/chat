@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import Head from '../head'
+import Head from '../Head'
 import { subscriptionOnChannel, unsubscriptionOnChannel } from '../../redux/reducers/users'
 
 const SubscriptionOnChannel = (props) => {
@@ -88,7 +88,5 @@ const SubscriptionOnChannel = (props) => {
     </div>
   )
 }
-
-SubscriptionOnChannel.propTypes = {}
 
 export default React.memo(SubscriptionOnChannel)

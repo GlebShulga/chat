@@ -10,7 +10,6 @@ const Chat = () => {
   const listOfUsers = useSelector((s) => s.users.listOfUsers)
   const { listOfChannels, channel } = useSelector((s) => s.channels)
   const currentUser = useSelector((s) => s.auth.user)
-  // const isAlredySignIn = useSelector((s) => s.auth.isAlredySignIn)
   const altOfAvatar = useSelector((s) => s.avatars.listOfAvatars)
   const dispatch = useDispatch()
   const { channel: currenChannelTitle } = useParams()

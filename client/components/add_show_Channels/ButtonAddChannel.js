@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import AddChannel from './addChannel'
+import AddChannel from './AddChannel'
 import addChannelIcon from '../../assets/images/addChannelIcon.svg'
 import createChannelIcon from '../../assets/images/createChannelIcon.svg'
 
@@ -54,7 +54,5 @@ const ButtonAddChannel = () => {
     </div>
   )
 }
-
-ButtonAddChannel.propTypes = {}
 
 export default React.memo(ButtonAddChannel)
