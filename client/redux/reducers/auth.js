@@ -14,7 +14,7 @@ const initialState = {
   token: cookies.get('token'),
   user: {},
   error: null,
-  isAlredySignIn: localStorage.getItem('isAlredySignIn') ?? false
+  isAlredySignIn: localStorage?.getItem('isAlredySignIn') ?? false
 }
 
 export default (state = initialState, action) => {
