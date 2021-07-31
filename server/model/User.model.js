@@ -1,5 +1,7 @@
 import mongoose from 'mongoose'
-import bcrypt from 'bcrypt-nodejs'
+import bcrypt from 'bcryptjs'
+
+const SALT_WORK_FACTOR = 10
 
 const userSchema = new mongoose.Schema(
   {
@@ -31,15 +33,15 @@ userSchema.pre('save', async function (next) {
     return next()
   }
 
-  this.password = bcrypt.hashSync(this.password)
+  const salt = await bcrypt.genSalt(SALT_WORK_FACTOR)
+  this.password = await bcrypt.hash(this.password, salt)
 
   return next()
 })
 
 userSchema.method({
   passwordMatches(password) {
-    console.log(bcrypt.hashSync(password), this.password)
-    return bcrypt.compareSync(password, this.password)
+    return bcrypt.compare(password, this.password)
   }
 })
 
