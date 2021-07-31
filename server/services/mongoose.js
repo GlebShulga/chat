@@ -12,6 +12,7 @@ mongoose.connection.on('error', (err) => {
 
 exports.connect = async (mongoURL = config.mongoURL) => {
   mongoose.connect(mongoURL, {
+    keepAlive: 1,
     useUnifiedTopology: true,
     useNewUrlParser: true,
     useCreateIndex: true
