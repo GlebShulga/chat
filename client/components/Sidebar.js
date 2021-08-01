@@ -41,7 +41,7 @@ const Sidebar = () => {
           </button>
         </div>
       )}
-      <div className={isSidebar ? 'sidebarSM' : 'hidden md:visible sidebarMD'}>
+      <div className={isSidebar ? 'sidebarSM' : 'hidden md:visible md:block sidebarMD'}>
         <h1 className="text-white text-base lg:text-xl mb-2 mt-3 px-4 font-sans flex justify-between">
           <span className={currenChannelTitle ? 'visible' : 'invisible'}>
             {currenChannelTitle} channel
