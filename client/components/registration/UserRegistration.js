@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { addUser } from '../../redux/reducers/users'
@@ -11,6 +11,7 @@ const UserRegistration = () => {
   const [toggle, setToggle] = useState(false)
   const [login, setLogin] = useState()
   const [password, setPassword] = useState()
+  const [isAvatar, setIsAvatar] = useState(true)
 
   const onChangeLogin = (e) => {
     setLogin(e.target.value)
@@ -21,9 +22,19 @@ const UserRegistration = () => {
   }
 
   const onClick = () => {
-    const hashtag = `#${login}`
-    dispatch(addUser(login, password, hashtag, avatar))
+    if (avatar) {
+      const hashtag = `#${login}`
+      dispatch(addUser(login, password, hashtag, avatar))
+    }
+    setIsAvatar(false)
   }
+
+  useEffect(() => {
+    if (!avatar) {
+      setIsAvatar(false)
+    }
+    setIsAvatar(true)
+  }, [avatar])
 
   return (
     <div className="flex flex-col h-screen w-screen bg-gray-100">
@@ -48,6 +59,16 @@ const UserRegistration = () => {
               />
             </button>
           </div>
+          {!isAvatar && (
+            <div>
+              <div className="text-red-500 font-semibold flex justify-center text-lg pt-1">
+                Please, click on the picture and choose your avatar
+              </div>
+              {/* <div className="text-red-700 font-semibold flex justify-center text-2xl pt-1 pb-3">
+                Choose another name
+              </div> */}
+            </div>
+          )}
           {toggle && (
             <div className="absolute w-screen h-screen bg-gray-700 opacity-90 top-0 left-0 flex items-center justify-center z-10">
               <Avatars setToggle={setToggle} />
@@ -62,7 +83,7 @@ const UserRegistration = () => {
               type="text"
               placeholder="Type your login"
               className={error ? 'loginInput border-red-600' : 'loginInput'}
-              value={login}
+              value={login || ''}
               onChange={onChangeLogin}
               required
             />
@@ -94,7 +115,7 @@ const UserRegistration = () => {
                     border-b-2 border-gray-100
                     focus:text-gray-500 focus:outline-none focus:border-gray-200"
               required
-              value={password}
+              value={password || ''}
               onChange={onChangePassword}
             />
             {/* <!-- Auth Buttton --> */}
