@@ -8,6 +8,10 @@ Slack/Discord clone application.
 - Send message to channel
 - Fully Responsive
 
+## How to quickly try it?
+
+👉 The project is hosted on Heroku: https://mern-chat2020.herokuapp.com/
+
 ## How to use it?
 Install modules:
 npm install
