@@ -71,7 +71,7 @@ const Sidebar = () => {
           <div className="mb-6 py-1 px-4 text-white font-semibold text-sm md:text-base">
             {listOfUsers?.reduce((acc, rec) => {
               return rec.login === currentUser.login
-                ? rec.subscriptionOnChannels.map((subscribedChannel) =>
+                ? rec.subscriptionOnChannels?.map((subscribedChannel) =>
                     currenChannelTitle === subscribedChannel ? (
                       <div key={currenChannelTitle} className="bg-green-500 py-1">
                         <div className="hover:text-gray-200 pl-1">
@@ -98,7 +98,7 @@ const Sidebar = () => {
               {currentUser.login} <i className="text-grey-400 text-sm">(me)</i>
             </span>
           </div>
-          {listOfUsers.map((user) => {
+          {listOfUsers?.map((user) => {
             return (
               user.subscriptionOnChannels.indexOf(currenChannelTitle) >= 0 &&
               user.login !== currentUser.login && (

@@ -64,9 +64,6 @@ const UserRegistration = () => {
               <div className="text-red-500 font-semibold flex justify-center text-lg pt-1">
                 Please, click on the picture and choose your avatar
               </div>
-              {/* <div className="text-red-700 font-semibold flex justify-center text-2xl pt-1 pb-3">
-                Choose another name
-              </div> */}
             </div>
           )}
           {toggle && (

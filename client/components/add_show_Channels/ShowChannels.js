@@ -31,7 +31,7 @@ const SubscriptionOnChannel = (props) => {
           <div className="text-gray-200 text-5xl font-bold underline grid justify-center py-5">
             Channels
           </div>
-          {listOfChannels.map((channel) => {
+          {listOfChannels?.map((channel) => {
             const subscriptionsOfCurrentUser = currentUser.subscriptionOnChannels
             const isAlreadySubscribed = subscriptionsOfCurrentUser.find(
               (subscribedChannel) => subscribedChannel === channel.channelTitle

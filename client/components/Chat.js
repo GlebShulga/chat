@@ -106,10 +106,10 @@ const Chat = () => {
         {/* <!-- Chat messages --> */}
         <div className="px-6 flex-1 scrollbar overflow-scroll-x overflow-y-auto flex-grow flex flex-col">
           <div className="w-5/6 pt-0">
-            {listOfMessagesSortedByDate.map((message) => {
+            {listOfMessagesSortedByDate?.map((message) => {
               return (
                 <div key={message._id}>
-                  {listOfUsers.map((user) => {
+                  {listOfUsers?.map((user) => {
                     return (
                       currentChannelId === message.channelId &&
                       user._id === message.userId && (
@@ -135,10 +135,10 @@ const Chat = () => {
                 </div>
               )
             })}
-            {listOfMessagesFromSocketSortedByDate.map((messageFromSocket) => {
+            {listOfMessagesFromSocketSortedByDate?.map((messageFromSocket) => {
               return (
                 <div key={messageFromSocket.userId && messageFromSocket.messageText}>
-                  {listOfUsers.map((user) => {
+                  {listOfUsers?.map((user) => {
                     return (
                       currentChannelId === messageFromSocket.room &&
                       user._id === messageFromSocket.userId && (

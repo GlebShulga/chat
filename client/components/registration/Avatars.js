@@ -28,7 +28,7 @@ const Avatars = (props) => {
         <div className="flex flex-col pt-3">
           <div className="text-gray-200 text-5xl font-bold grid justify-center py-5">Avatars</div>
           <div className="grid gap-4 grid-cols-3">
-            {listOfAvatars.map((avatar) => {
+            {listOfAvatars?.map((avatar) => {
               return (
                 <button
                   key={avatar.alt}

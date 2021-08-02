@@ -61,7 +61,7 @@ export function addChannel(creatorId, channelTitle, channelDescription) {
         const { listOfUsers } = store.users
         const _id = creatorId
         const subscriptionOnChannels = channelTitle
-        const newUserSubscriptions = listOfUsers.map((user) =>
+        const newUserSubscriptions = listOfUsers?.map((user) =>
           user._id === _id
             ? {
                 ...user,

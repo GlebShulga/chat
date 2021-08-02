@@ -63,7 +63,7 @@ export function subscriptionOnChannel(_id, subscriptionOnChannels) {
   return (dispatch, getState) => {
     const store = getState()
     const { listOfUsers } = store.users
-    const newUserSubscriptions = listOfUsers.map((user) =>
+    const newUserSubscriptions = listOfUsers?.map((user) =>
       user._id === _id
         ? {
             ...user,
@@ -84,7 +84,7 @@ export function unsubscriptionOnChannel(_id, subscriptionOnChannels) {
   return (dispatch, getState) => {
     const store = getState()
     const { listOfUsers } = store.users
-    const delUserSubscriptions = listOfUsers.map((user) => {
+    const delUserSubscriptions = listOfUsers?.map((user) => {
       if (user._id === _id) {
         const filteredSubscriptions = user.subscriptionOnChannels.filter(
           (subscription) => subscription !== subscriptionOnChannels
