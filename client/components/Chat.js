@@ -48,7 +48,7 @@ const Chat = () => {
     setMessageText(e.target.value)
   }
   const onClickSendMessage = useCallback(() => {
-    if (messageText) {
+    if (messageText.trim()) {
       const currentUserId = currentUser._id
       const currentChannelId = listOfChannels?.reduce(
         (acc, rec) => (rec.channelTitle === currenChannelTitle ? rec._id : acc),
@@ -100,7 +100,11 @@ const Chat = () => {
             <h3 className="text-gray-800 text-md mb-1 font-extrabold justify-self-center md:justify-self-start">
               # {`${currenChannelTitle}`}
             </h3>
-            <div className="text-gray-500 text-sm justify-self-center md:justify-self-start">{`${channel?.channelDescription}`}</div>
+            {channel?.channelDescription ? (
+              <div className="text-gray-500 text-sm justify-self-center md:justify-self-start">{`${channel?.channelDescription}`}</div>
+            ) : (
+              <div className="invisible" />
+            )}
           </div>
         </div>
         {/* <!-- Chat messages --> */}
