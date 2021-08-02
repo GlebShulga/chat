@@ -13,6 +13,8 @@ const UserRegistration = () => {
   const [password, setPassword] = useState()
   const [isAvatar, setIsAvatar] = useState(true)
 
+  console.log(isAvatar, 'isAvatar')
+
   const onChangeLogin = (e) => {
     setLogin(e.target.value)
   }
@@ -26,7 +28,9 @@ const UserRegistration = () => {
       const hashtag = `#${login}`
       dispatch(addUser(login, password, hashtag, avatar))
     }
-    setIsAvatar(false)
+    if (!avatar) {
+      setIsAvatar(false)
+    }
   }
 
   useEffect(() => {
@@ -61,7 +65,7 @@ const UserRegistration = () => {
           </div>
           {!isAvatar && (
             <div>
-              <div className="text-red-500 font-semibold flex justify-center text-lg pt-1">
+              <div className="text-red-500 font-semibold flex justify-center text-lg py-1">
                 Please, click on the picture and choose your avatar
               </div>
             </div>
