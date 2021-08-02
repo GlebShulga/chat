@@ -80,10 +80,16 @@ const Chat = () => {
   }
 
   const listOfMessagesSortedByDate = useMemo(() => SortedByDate(listOfMessages), [listOfMessages])
-  const listOfMessagesFromSocketSortedByDate = useMemo(
-    () => SortedByDate(listOfMessagesFromSocket),
-    [listOfMessagesFromSocket]
-  )
+  const listOfMessagesForFiltering = listOfMessages.reduce((acc, rec) => {
+    return [...acc, `${rec.messageText}_${rec.messageTime}`]
+  }, [])
+  const filteredListOfMessagesFromSocket = listOfMessagesFromSocket.reduce((acc, rec) => {
+    if (listOfMessagesForFiltering.includes(`${rec.messageText}_${rec.messageTime}`)) {
+      return acc
+    }
+    return [...acc, rec]
+  }, [])
+  const listOfMessagesFromSocketSortedByDate = SortedByDate(filteredListOfMessagesFromSocket)
 
   return (
     <div className="ml-auto pt-0 z-0 h-full sm:w-2/3 md:w-3/4 w-full lg:w-4/5 xl:w-5/6">
