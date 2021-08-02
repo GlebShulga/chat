@@ -174,7 +174,7 @@ const config = {
       ignoreOrder: false
     }),
     new webpack.DefinePlugin(
-      Object.keys(process.env).reduce(
+      Object.keys(process.env)?.reduce(
         (res, key) => ({ ...res, [key]: JSON.stringify(process.env[key]) }),
         {
           APP_VERSION: JSON.stringify(APP_VERSION)

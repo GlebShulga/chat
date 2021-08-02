@@ -103,8 +103,7 @@ server.post('/api/v1/auth', async (req, res) => {
 
 server.post('/api/v1/channels/:channelTitle', async (req, res) => {
   const { channelTitle } = req.params
-  const { channelDescription } = req.body
-  const { creatorId } = req.body
+  const { channelDescription, creatorId } = req.body
   const channel = new Channel({
     creatorId,
     channelTitle,
@@ -130,10 +129,7 @@ server.get('/api/v1/channels/:channelTitle', async (req, res) => {
 })
 
 server.post('/api/v1/users', async (req, res) => {
-  const { login } = req.body
-  const { password } = req.body
-  const { hashtag } = req.body
-  const { avatar } = req.body
+  const { login, password, hashtag, avatar } = req.body
   User.findOne({ login }).then((u) => {
     if (!u) {
       const user = new User({
@@ -158,8 +154,7 @@ server.get('/api/v1/users', async (req, res) => {
 })
 
 server.patch('/api/v1/users', async (req, res) => {
-  const { _id } = req.body
-  const { subscriptionOnChannels } = req.body
+  const { _id, subscriptionOnChannels } = req.body
   User.updateOne(
     { _id },
     {
@@ -178,8 +173,7 @@ server.patch('/api/v1/users', async (req, res) => {
 })
 
 server.delete('/api/v1/users', async (req, res) => {
-  const { _id } = req.body
-  const { subscriptionOnChannels } = req.body
+  const { _id, subscriptionOnChannels } = req.body
   User.updateOne(
     { _id },
     {
@@ -198,10 +192,7 @@ server.delete('/api/v1/users', async (req, res) => {
 })
 
 server.post('/api/v1/messages', async (req, res) => {
-  const { messageText } = req.body
-  const { channelId } = req.body
-  const { userId } = req.body
-  const { messageTime } = req.body
+  const { messageText, channelId, userId, messageTime } = req.body
   const message = new Message({
     ...templateMessage,
     userId,
@@ -216,9 +207,13 @@ server.post('/api/v1/messages', async (req, res) => {
 })
 
 server.get('/api/v1/messages', (req, res) => {
-  Message.find({}).then((listOfMessages) => {
-    res.json(listOfMessages)
-  })
+  try {
+    Message.find({}).then((listOfMessages) => {
+      res.json(listOfMessages)
+    })
+  } catch (e) {
+    res.status(500).send({ message: e.message })
+  }
 })
 
 server.use('/api/', (req, res) => {

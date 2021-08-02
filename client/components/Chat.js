@@ -50,7 +50,7 @@ const Chat = () => {
   const onClickSendMessage = useCallback(() => {
     if (messageText) {
       const currentUserId = currentUser._id
-      const currentChannelId = listOfChannels.reduce(
+      const currentChannelId = listOfChannels?.reduce(
         (acc, rec) => (rec.channelTitle === currenChannelTitle ? rec._id : acc),
         ''
       )
@@ -59,7 +59,7 @@ const Chat = () => {
     }
   }, [messageText, currentUser._id, listOfChannels, currenChannelTitle])
 
-  const currentChannelId = listOfChannels.reduce(
+  const currentChannelId = listOfChannels?.reduce(
     (acc, rec) => (rec.channelTitle === currenChannelTitle ? rec._id : acc),
     ''
   )
@@ -80,10 +80,10 @@ const Chat = () => {
   }
 
   const listOfMessagesSortedByDate = useMemo(() => SortedByDate(listOfMessages), [listOfMessages])
-  const listOfMessagesForFiltering = listOfMessages.reduce((acc, rec) => {
+  const listOfMessagesForFiltering = listOfMessages?.reduce((acc, rec) => {
     return [...acc, `${rec.messageText}_${rec.messageTime}`]
   }, [])
-  const filteredListOfMessagesFromSocket = listOfMessagesFromSocket.reduce((acc, rec) => {
+  const filteredListOfMessagesFromSocket = listOfMessagesFromSocket?.reduce((acc, rec) => {
     if (listOfMessagesForFiltering.includes(`${rec.messageText}_${rec.messageTime}`)) {
       return acc
     }

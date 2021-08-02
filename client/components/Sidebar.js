@@ -69,7 +69,7 @@ const Sidebar = () => {
             </div>
           </div>
           <div className="mb-6 py-1 px-4 text-white font-semibold text-sm md:text-base">
-            {listOfUsers.reduce((acc, rec) => {
+            {listOfUsers?.reduce((acc, rec) => {
               return rec.login === currentUser.login
                 ? rec.subscriptionOnChannels.map((subscribedChannel) =>
                     currenChannelTitle === subscribedChannel ? (

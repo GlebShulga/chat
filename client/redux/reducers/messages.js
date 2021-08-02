@@ -62,7 +62,3 @@ export function getMessages() {
 export function updatelistOfMessagesFromSocket(data) {
   return { type: UPDATE_MESSAGES_FROM_SOCKET, data }
 }
-
-export function nullifylistOfMessages() {
-  return { type: NULLIFY_MESSAGES_FROM_SOCKET }
-}
