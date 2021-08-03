@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useMemo } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { addMessage } from '../redux/reducers/messages'
@@ -16,6 +16,8 @@ const Chat = () => {
 
   const [messageText, setMessageText] = useState()
 
+  console.log(listOfMessagesFromSocket)
+
   function getActualTime() {
     const monthsArr = [
       'January',
@@ -32,10 +34,10 @@ const Chat = () => {
       'December'
     ]
     const time = new Date()
-    let hour = time.getHours()
-    let minute = time.getMinutes()
-    const day = time.getDate()
-    const month = monthsArr[time.getMonth()]
+    let hour = time.getUTCHours()
+    let minute = time.getUTCMinutes()
+    const day = time.getUTCDate()
+    const month = monthsArr[time.getUTCMonth()]
 
     hour = hour < 10 ? `0${hour}` : hour
     minute = minute < 10 ? `0${minute}` : minute
@@ -79,7 +81,6 @@ const Chat = () => {
     return messages.sort((a, b) => a.messageTime - b.messageTime)
   }
 
-  const listOfMessagesSortedByDate = useMemo(() => SortedByDate(listOfMessages), [listOfMessages])
   const listOfMessagesForFiltering = listOfMessages?.reduce((acc, rec) => {
     return [...acc, `${rec.messageText}_${rec.messageTime}`]
   }, [])
@@ -110,7 +111,7 @@ const Chat = () => {
         {/* <!-- Chat messages --> */}
         <div className="px-6 flex-1 scrollbar overflow-scroll-x overflow-y-auto flex-grow flex flex-col">
           <div className="w-5/6 pt-0">
-            {listOfMessagesSortedByDate?.map((message) => {
+            {listOfMessages?.map((message) => {
               return (
                 <div key={message._id}>
                   {listOfUsers?.map((user) => {

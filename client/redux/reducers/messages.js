@@ -4,7 +4,7 @@ import { getSocket } from '../index'
 const ADD_MESSAGE = 'ADD_MESSAGE'
 const GET_MESSAGES_LIST = 'GET_MESSAGES_LIST'
 const UPDATE_MESSAGES_FROM_SOCKET = 'UPDATE_MESSAGES_FROM_SOCKET'
-const NULLIFY_MESSAGES_FROM_SOCKET = 'NULLIFY_MESSAGES_FROM_SOCKET'
+// const NULLIFY_MESSAGES_FROM_SOCKET = 'NULLIFY_MESSAGES_FROM_SOCKET'
 
 const initialState = {
   listOfMessages: [],
@@ -23,9 +23,9 @@ export default (state = initialState, action) => {
         listOfMessagesFromSocket: [...state.listOfMessagesFromSocket, action.data]
       }
     }
-    case NULLIFY_MESSAGES_FROM_SOCKET: {
-      return { ...state, listOfMessages: [] }
-    }
+    // case NULLIFY_MESSAGES_FROM_SOCKET: {
+    //   return { ...state, listOfMessages: [] }
+    // }
     default:
       return state
   }

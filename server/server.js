@@ -209,7 +209,11 @@ server.post('/api/v1/messages', async (req, res) => {
 server.get('/api/v1/messages', (req, res) => {
   try {
     Message.find({}).then((listOfMessages) => {
-      res.json(listOfMessages)
+      const SortedByDate = (messages) => {
+        return messages.sort((a, b) => a.messageTime - b.messageTime)
+      }
+      const listOfMessagesSortedByDate = SortedByDate(listOfMessages)
+      res.json(listOfMessagesSortedByDate)
     })
   } catch (e) {
     res.status(500).send({ message: e.message })
