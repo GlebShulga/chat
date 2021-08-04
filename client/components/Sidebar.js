@@ -5,7 +5,6 @@ import { Link, useParams } from 'react-router-dom'
 import ButtonAddChannel from './add_show_Channels/ButtonAddChannel'
 import ButtonShowChannels from './add_show_Channels/ButtonShowChannels'
 import { updateActiveChannels, userJoinToChat } from '../redux/reducers/channels'
-// import { getUsers } from '../redux/reducers/users'
 import closeIcon from '../assets/images/closeIcon.svg'
 import menuIcon from '../assets/images/menuIcon.svg'
 
@@ -15,8 +14,6 @@ const Sidebar = () => {
   const listOfUsers = useSelector((s) => s.users.listOfUsers)
   const { listOfChannels, onlineUsers } = useSelector((s) => s.channels)
   const { channel: currenChannelTitle } = useParams()
-
-  console.log(listOfUsers)
 
   const [isSidebar, setIsSidebar] = useState(false)
 
@@ -28,7 +25,6 @@ const Sidebar = () => {
     )?._id
     dispatch(userJoinToChat(activeChannelId))
     dispatch(updateActiveChannels(activeChannelId))
-    // dispatch(getUsers())
     return setIsSidebar(false)
   }, [currenChannelTitle])
 

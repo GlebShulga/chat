@@ -22,7 +22,6 @@ const AddChannel = (props) => {
   const onClickAddChannel = () => {
     if (listOfChannels.indexOf(channelTitle) === -1) {
       dispatch(addChannel(creatorId, channelTitle, channelDescription))
-      // dispatch(subscriptionOnChannel(creatorId, channelTitle))
       history.push(`/${channelTitle}`)
       props.setToggle(false)
       setChannelAlreadyExist(false)

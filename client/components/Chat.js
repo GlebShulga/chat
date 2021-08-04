@@ -77,21 +77,6 @@ const Chat = () => {
     }
   }
 
-  const SortedByDate = (messages) => {
-    return messages.sort((a, b) => a.messageTime - b.messageTime)
-  }
-
-  const listOfMessagesForFiltering = listOfMessages?.reduce((acc, rec) => {
-    return [...acc, `${rec.messageText}_${rec.messageTime}`]
-  }, [])
-  const filteredListOfMessagesFromSocket = listOfMessagesFromSocket?.reduce((acc, rec) => {
-    if (listOfMessagesForFiltering.includes(`${rec.messageText}_${rec.messageTime}`)) {
-      return acc
-    }
-    return [...acc, rec]
-  }, [])
-  const listOfMessagesFromSocketSortedByDate = SortedByDate(filteredListOfMessagesFromSocket)
-
   return (
     <div className="ml-auto pt-0 z-0 h-full sm:w-2/3 md:w-3/4 w-full lg:w-4/5 xl:w-5/6">
       <div className="w-full flex flex-col my-auto h-full">
@@ -140,7 +125,7 @@ const Chat = () => {
                 </div>
               )
             })}
-            {listOfMessagesFromSocketSortedByDate?.map((messageFromSocket) => {
+            {listOfMessagesFromSocket?.map((messageFromSocket) => {
               return (
                 <div key={messageFromSocket.userId && messageFromSocket.messageText}>
                   {listOfUsers?.map((user) => {
