@@ -69,12 +69,12 @@ export function addChannel(creatorId, channelTitle, channelDescription) {
               }
             : user
         )
-        dispatch({ type: SUBSCRIPTION_ON_CHANNEL, listOfUsers: newUserSubscriptions })
         axios({
           method: 'patch',
           url: '/api/v1/users',
           data: { _id, subscriptionOnChannels }
         })
+        dispatch({ type: SUBSCRIPTION_ON_CHANNEL, listOfUsers: newUserSubscriptions })
       })
   }
 }
