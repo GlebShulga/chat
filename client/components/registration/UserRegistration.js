@@ -13,8 +13,6 @@ const UserRegistration = () => {
   const [password, setPassword] = useState()
   const [isAvatar, setIsAvatar] = useState(true)
 
-  console.log(isAvatar, 'isAvatar')
-
   const onChangeLogin = (e) => {
     setLogin(e.target.value)
   }

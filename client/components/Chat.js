@@ -16,8 +16,6 @@ const Chat = () => {
 
   const [messageText, setMessageText] = useState()
 
-  console.log(listOfMessagesFromSocket)
-
   function getActualTime() {
     const monthsArr = [
       'January',
