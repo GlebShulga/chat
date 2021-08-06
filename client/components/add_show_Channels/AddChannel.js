@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import Head from '../Head'
 import { addChannel } from '../../redux/reducers/channels'
-// import { subscriptionOnChannel } from '../../redux/reducers/users'
 
 const AddChannel = (props) => {
   const history = useHistory()
@@ -38,7 +37,7 @@ const AddChannel = (props) => {
             className="border border-gray-300 text-gray-600 rounded-lg p-2"
             type="text"
             placeholder="Type new channel's name"
-            value={channelTitle}
+            value={channelTitle ?? ''}
             onChange={onChangeTitle}
           />
         )}
@@ -48,7 +47,7 @@ const AddChannel = (props) => {
               className="border-4 border-red-600 text-gray-600 rounded-lg p-2"
               type="text"
               placeholder="Type new channel's name"
-              value={channelTitle || ''}
+              value={channelTitle ?? ''}
               onChange={onChangeTitle}
             />
             <div className="text-red-500 font-semibold flex justify-center text-lg pt-1">
@@ -60,7 +59,7 @@ const AddChannel = (props) => {
           className="border border-gray-300 text-gray-600 rounded-lg p-2"
           type="text"
           placeholder="Type description"
-          value={channelDescription || ''}
+          value={channelDescription ?? ''}
           onChange={onChangeDescription}
         />
         <div className="flex justify-between pt-3">
@@ -86,4 +85,4 @@ const AddChannel = (props) => {
   )
 }
 
-export default React.memo(AddChannel)
+export default AddChannel
