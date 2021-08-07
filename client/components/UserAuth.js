@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-import React, { useState } from 'react'
+import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { updateLoginField, updatePasswordField, singIn } from '../redux/reducers/auth'
@@ -9,7 +8,6 @@ const UserAuth = () => {
   const login = useSelector((s) => s.auth.login)
   const password = useSelector((s) => s.auth.password)
   const dispatch = useDispatch()
-  // const [userDataIncorrect, setUserDataIncorrect] = useState(false)
 
   const onChangeLogin = (e) => {
     dispatch(updateLoginField(e.target.value))
