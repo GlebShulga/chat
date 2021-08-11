@@ -41,6 +41,7 @@ const ButtonAddChannel = () => {
       <button
         type="button"
         id="btnAdd"
+        aria-label="Add channels"
         className="p-0 w-8 h-8 bg-purple-600 rounded-full hover:bg-green-500 active:shadow-lg mouse shadow transition ease-in duration-200 focus:outline-none"
         onClick={() => setToggle(!toggle)}
       >

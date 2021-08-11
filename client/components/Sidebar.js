@@ -73,7 +73,7 @@ const Sidebar = () => {
               return rec.login === currentUser.login
                 ? rec.subscriptionOnChannels?.map((subscribedChannel) =>
                     currenChannelTitle === subscribedChannel ? (
-                      <div key={currenChannelTitle} className="bg-green-500 py-1">
+                      <div key={currenChannelTitle} className="bg-green-700 py-1">
                         <div className="hover:text-gray-200 pl-1">
                           <Link to={`/${currenChannelTitle}`}>{`# ${currenChannelTitle}`}</Link>
                         </div>

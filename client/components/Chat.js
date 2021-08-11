@@ -158,22 +158,25 @@ const Chat = () => {
           </div>
         </div>
         <div className="flex m-6 rounded-lg border-2 border-gray-200 w-5/6">
-          <button
-            type="button"
-            id="btn"
-            className="text-3xl px-3 border-r-2 border-grey hover:bg-gray-200 active:shadow-lg mouse shadow transition ease-in duration-200 focus:outline-none"
-            onClick={onClickSendMessage}
-          >
-            +
-          </button>
-          <input
-            type="text"
-            className="w-full px-4"
-            placeholder={`Message to # ${currenChannelTitle}`}
-            value={messageText || ''}
-            onChange={onChange}
-            onKeyPress={handleKeypress}
-          />
+          <label htmlFor="message">
+            <button
+              type="button"
+              id="btn"
+              className="text-3xl px-3 border-r-2 border-grey hover:bg-gray-200 active:shadow-lg mouse shadow transition ease-in duration-200 focus:outline-none"
+              onClick={onClickSendMessage}
+            >
+              +
+            </button>
+            <input
+              id="message"
+              type="text"
+              className="w-full px-4"
+              placeholder={`Message to # ${currenChannelTitle}`}
+              value={messageText || ''}
+              onChange={onChange}
+              onKeyPress={handleKeypress}
+            />{' '}
+          </label>
         </div>
       </div>
     </div>
