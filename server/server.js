@@ -1,7 +1,6 @@
 import express from 'express'
 import path from 'path'
 import cors from 'cors'
-import bodyParser from 'body-parser'
 import { renderToStaticNodeStream } from 'react-dom/server'
 import React from 'react'
 
@@ -54,8 +53,8 @@ const middleware = [
   cors(),
   passport.initialize(),
   express.static(path.resolve(__dirname, '../dist/assets')),
-  bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }),
-  bodyParser.json({ limit: '50mb', extended: true }),
+  express.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }),
+  express.json({ limit: '50mb', extended: true }),
   cookieParser()
 ]
 passport.use('jwt', passportJWT.jwt)
