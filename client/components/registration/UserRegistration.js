@@ -107,7 +107,7 @@ const UserRegistration = () => {
               id="password"
               type="password"
               name="password"
-              placeholder="password"
+              placeholder="Type your password"
               autoComplete="current-password"
               className="block w-full py-3 px-1 mt-2 mb-4
                     text-gray-800 appearance-none
