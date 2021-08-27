@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom'
 import Head from '../Head'
 import { addChannel } from '../../redux/reducers/channels'
 
-const AddChannel = (props) => {
+const AddChannel = ({ setToggle }) => {
   const history = useHistory()
   const listOfChannels = useSelector((s) => s.channels.listOfChannels)
   const creatorId = useSelector((s) => s.auth.user._id)
@@ -22,7 +22,7 @@ const AddChannel = (props) => {
     if (listOfChannels.indexOf(channelTitle) === -1) {
       dispatch(addChannel(creatorId, channelTitle, channelDescription))
       history.push(`/${channelTitle}`)
-      props.setToggle(false)
+      setToggle(false)
       setChannelAlreadyExist(false)
     }
     setChannelAlreadyExist(true)
@@ -67,7 +67,7 @@ const AddChannel = (props) => {
             type="button"
             className="px-7 py-2 rounded-full bg-gray-300 text-gray-600 max-w-max shadow-sm hover:shadow-md"
             onClick={() => {
-              props.setToggle(false)
+              setToggle(false)
             }}
           >
             Cancel
