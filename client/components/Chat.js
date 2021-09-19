@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { addMessage } from '../redux/reducers/messages'
@@ -16,6 +16,12 @@ const Chat = () => {
   const { channel: currenChannelTitle } = useParams()
 
   const [messageText, setMessageText] = useState()
+
+    const messagesEndRef = useRef(null)
+
+    const scrollToBottom = () => {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }
 
   function getActualTime() {
     const monthsArr = [
@@ -57,6 +63,7 @@ const Chat = () => {
       )
       dispatch(addMessage(messageText, currentChannelId, currentUserId, getActualTime()))
       setMessageText('')
+      scrollToBottom()
     }
   }, [messageText, currentUser._id, listOfChannels, currenChannelTitle])
 
@@ -146,7 +153,7 @@ const Chat = () => {
                               <span className="dataMessage">{messageFromSocket.messageTime}</span>
                             </div>
                             <p className="textMessage">
-                              <span>{messageFromSocket.messageText}</span>
+                              <span ref={messagesEndRef}>{messageFromSocket.messageText}</span>
                             </p>
                           </div>
                         </div>
