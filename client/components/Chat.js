@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom'
 import { addMessage } from '../redux/reducers/messages'
 import { getChannel } from '../redux/reducers/channels'
 import { trySignIn } from '../redux/reducers/auth'
+import sendIcon from '../assets/images/sendIcon.svg'
 
 const Chat = () => {
   const { listOfMessages, listOfMessagesFromSocket } = useSelector((s) => s.messages)
@@ -48,7 +49,7 @@ const Chat = () => {
     setMessageText(e.target.value)
   }
   const onClickSendMessage = useCallback(() => {
-    if (messageText.trim()) {
+    if (messageText?.trim()) {
       const currentUserId = currentUser._id
       const currentChannelId = listOfChannels?.reduce(
         (acc, rec) => (rec.channelTitle === currenChannelTitle ? rec._id : acc),
@@ -158,14 +159,6 @@ const Chat = () => {
           </div>
         </div>
         <div className="flex m-6 rounded-lg border-2 border-gray-200 w-5/6">
-          <button
-            type="button"
-            id="btn"
-            className="text-3xl px-3 border-r-2 border-grey hover:bg-gray-200 active:shadow-lg mouse shadow transition ease-in duration-200 focus:outline-none"
-            onClick={onClickSendMessage}
-          >
-            +
-          </button>
           <input
             id="message"
             type="text"
@@ -175,6 +168,14 @@ const Chat = () => {
             onChange={onChange}
             onKeyPress={handleKeypress}
           />
+          <button
+            type="button"
+            id="btn"
+            className="text-3xl px-3 border-r-2 border-grey hover:bg-gray-200 active:shadow-lg mouse shadow transition ease-in duration-200 focus:outline-none"
+            onClick={onClickSendMessage}
+          >
+            <img src={sendIcon} className="h-5 w-5" alt="Send message icon" />
+          </button>
         </div>
       </div>
     </div>
