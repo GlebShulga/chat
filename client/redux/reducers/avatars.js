@@ -57,9 +57,9 @@ export default (state = initialState, action) => {
 }
 
 export function setChosenAvatar(selectedAva) {
-  return () => {
+  return (dispatch) => {
     const chosenAvatar = selectedAva
-    ({
+    dispatch({
       type: SET_CHOSEN_AVATAR,
       chosenAvatar
     })
