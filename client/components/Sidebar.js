@@ -28,6 +28,26 @@ const Sidebar = () => {
     return setIsSidebar(false)
   }, [currenChannelTitle])
 
+  const channelLink = listOfUsers?.reduce((acc, rec) => {
+    return rec.login === currentUser.login
+      ? rec.subscriptionOnChannels?.map((subscribedChannel) =>
+          currenChannelTitle === subscribedChannel ? (
+            <div key={currenChannelTitle} className="bg-green-700 py-1">
+              <div className="hover:text-gray-200 pl-1">
+                <Link to={`/${currenChannelTitle}`}>{`# ${currenChannelTitle}`}</Link>
+              </div>
+            </div>
+          ) : (
+            <div key={subscribedChannel} className="py-1">
+              <div className="hover:text-gray-400">
+                <Link to={`/${subscribedChannel}`}>{`# ${subscribedChannel}`}</Link>
+              </div>
+            </div>
+          )
+        )
+      : acc
+  }, '')
+
   return (
     <div className="md:w-1/4 absolute lg:w-1/5 xl:w-1/6 mr-5">
       {!isSidebar && (
@@ -69,25 +89,7 @@ const Sidebar = () => {
             </div>
           </div>
           <div className="mb-6 py-1 px-4 text-white font-semibold text-sm md:text-base">
-            {listOfUsers?.reduce((acc, rec) => {
-              return rec.login === currentUser.login
-                ? rec.subscriptionOnChannels?.map((subscribedChannel) =>
-                    currenChannelTitle === subscribedChannel ? (
-                      <div key={currenChannelTitle} className="bg-green-700 py-1">
-                        <div className="hover:text-gray-200 pl-1">
-                          <Link to={`/${currenChannelTitle}`}>{`# ${currenChannelTitle}`}</Link>
-                        </div>
-                      </div>
-                    ) : (
-                      <div key={subscribedChannel} className="py-1">
-                        <div className="hover:text-gray-400">
-                          <Link to={`/${subscribedChannel}`}>{`# ${subscribedChannel}`}</Link>
-                        </div>
-                      </div>
-                    )
-                  )
-                : acc
-            }, '')}
+            {channelLink}
           </div>
         </div>
         <div className="md:block">
