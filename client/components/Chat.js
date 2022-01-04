@@ -17,11 +17,11 @@ const Chat = () => {
 
   const [messageText, setMessageText] = useState()
 
-    const messagesEndRef = useRef(null)
+  const messagesEndRef = useRef(null)
 
-    const scrollToBottom = () => {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-    }
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
 
   function getActualTime() {
     const monthsArr = [

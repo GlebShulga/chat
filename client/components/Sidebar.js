@@ -28,7 +28,7 @@ const Sidebar = () => {
     return setIsSidebar(false)
   }, [currenChannelTitle])
 
-  const channelLink = listOfUsers?.reduce((acc, rec) => {
+  const channelsLinks = listOfUsers?.reduce((acc, rec) => {
     return rec.login === currentUser.login
       ? rec.subscriptionOnChannels?.map((subscribedChannel) =>
           currenChannelTitle === subscribedChannel ? (
@@ -89,7 +89,7 @@ const Sidebar = () => {
             </div>
           </div>
           <div className="mb-6 py-1 px-4 text-white font-semibold text-sm md:text-base">
-            {channelLink}
+            {channelsLinks}
           </div>
         </div>
         <div className="md:block">

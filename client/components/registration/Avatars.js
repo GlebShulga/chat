@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import Head from '../Head'
+import Avatar from './Avatar'
 import { setChosenAvatar } from '../../redux/reducers/avatars'
 
-const Avatars = (props) => {
+const Avatars = ({ setToggle }) => {
   const listOfAvatars = useSelector((s) => s.avatars.listOfAvatars)
   const [selected, setSelected] = useState('')
   const [selectedAva, setSelectedAva] = useState(null)
@@ -13,12 +14,8 @@ const Avatars = (props) => {
   const onClickSave = () => {
     if (selected) {
       dispatch(setChosenAvatar(selectedAva))
-      props.setToggle(false)
+      setToggle(false)
     }
-  }
-  const onClickAva = (avatar) => {
-    setSelected(avatar.alt)
-    setSelectedAva(avatar.src)
   }
 
   return (
@@ -30,21 +27,14 @@ const Avatars = (props) => {
           <div className="grid gap-4 grid-cols-3">
             {listOfAvatars?.map((avatar) => {
               return (
-                <button
-                  key={avatar.alt}
-                  type="button"
-                  onClick={() => {
-                    onClickAva(avatar)
-                  }}
-                >
-                  <img
-                    className={selected === avatar.alt ? 'avatarImg bg-gray-500' : 'avatarImg'}
-                    src={avatar.src}
-                    width="96"
-                    height="96"
-                    alt={avatar.alt}
+                <div key={avatar.alt}>
+                  <Avatar
+                    avatar={avatar}
+                    setSelectedAva={setSelectedAva}
+                    setSelected={setSelected}
+                    selected={selected}
                   />
-                </button>
+                </div>
               )
             })}
           </div>
