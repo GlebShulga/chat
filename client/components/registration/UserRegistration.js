@@ -8,7 +8,7 @@ const UserRegistration = () => {
   const error = useSelector((s) => s.users.error)
   const avatar = useSelector((s) => s.avatars.chosenAvatar)
   const dispatch = useDispatch()
-  const [toggle, setToggle] = useState(false)
+  const [isAvatarModal, setIsAvatarModal] = useState(false)
   const [login, setLogin] = useState()
   const [password, setPassword] = useState()
   const [isAvatar, setIsAvatar] = useState(true)
@@ -38,6 +38,8 @@ const UserRegistration = () => {
     setIsAvatar(true)
   }, [avatar])
 
+  const registration = 'Registration'
+
   return (
     <div className="flex flex-col h-screen w-screen bg-gray-100">
       {/* <!-- Auth Card Container --> */}
@@ -50,10 +52,10 @@ const UserRegistration = () => {
         >
           {/* <!-- Card Title --> */}
           <h2 className="text-center font-semibold text-3xl lg:text-4xl text-gray-800">
-            Registration
+            {registration}
           </h2>
           <div className="flex justify-center p-4">
-            <button type="button" onClick={() => setToggle(!toggle)}>
+            <button type="button" onClick={() => setIsAvatarModal(!isAvatarModal)}>
               <img
                 className="rounded-full h-32 w-32"
                 src={avatar || 'https://ssl.gstatic.com/accounts/ui/avatar_2x.png'}
@@ -68,9 +70,9 @@ const UserRegistration = () => {
               </div>
             </div>
           )}
-          {toggle && (
+          {isAvatarModal && (
             <div className="absolute w-screen h-screen bg-gray-700 opacity-90 top-0 left-0 flex items-center justify-center z-10">
-              <Avatars setToggle={setToggle} />
+              <Avatars setIsAvatarModal={setIsAvatarModal} />
             </div>
           )}
           <form>
@@ -125,7 +127,7 @@ const UserRegistration = () => {
                     focus:outline-none hover:bg-gray-700 hover:shadow-none"
               onClick={onClick}
             >
-              Registration
+              {registration}
             </button>
             {/* <!-- Another Auth Routes --> */}
             <div className="sm:flex sm:flex-wrap mt-8 sm:mb-4 text-sm justify-center">
@@ -140,4 +142,4 @@ const UserRegistration = () => {
   )
 }
 
-export default React.memo(UserRegistration)
+export default UserRegistration

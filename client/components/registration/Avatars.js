@@ -4,7 +4,7 @@ import Head from '../Head'
 import Avatar from './Avatar'
 import { setChosenAvatar } from '../../redux/reducers/avatars'
 
-const Avatars = ({ setToggle }) => {
+const Avatars = ({ setIsAvatarModal }) => {
   const listOfAvatars = useSelector((s) => s.avatars.listOfAvatars)
   const [selected, setSelected] = useState('')
   const [selectedAva, setSelectedAva] = useState(null)
@@ -14,7 +14,7 @@ const Avatars = ({ setToggle }) => {
   const onClickSave = () => {
     if (selected) {
       dispatch(setChosenAvatar(selectedAva))
-      setToggle(false)
+      setIsAvatarModal(false)
     }
   }
 
@@ -53,4 +53,4 @@ const Avatars = ({ setToggle }) => {
   )
 }
 
-export default React.memo(Avatars)
+export default Avatars
