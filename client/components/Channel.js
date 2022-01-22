@@ -2,7 +2,7 @@ import React from 'react'
 
 import Head from './Head'
 import Sidebar from './Sidebar'
-import Chat from './Chat'
+import Chat from './Chat/Chat'
 
 const Channel = () => {
   return (

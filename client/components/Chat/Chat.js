@@ -1,14 +1,16 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import { addMessage } from '../redux/reducers/messages'
-import { getChannel } from '../redux/reducers/channels'
-import { trySignIn } from '../redux/reducers/auth'
-import sendIcon from '../assets/images/sendIcon.svg'
+import Messages from './Messages'
+import SocketMessages from './SocketMessages'
+import { addMessage } from '../../redux/reducers/messages'
+import { getChannel } from '../../redux/reducers/channels'
+import { trySignIn } from '../../redux/reducers/auth'
+import { getActualTime } from '../helpers'
+import sendIcon from '../../assets/images/sendIcon.svg'
 
 const Chat = () => {
   const { listOfMessages, listOfMessagesFromSocket } = useSelector((s) => s.messages)
-  const listOfUsers = useSelector((s) => s.users.listOfUsers)
   const { listOfChannels, channel } = useSelector((s) => s.channels)
   const currentUser = useSelector((s) => s.auth.user)
   const altOfAvatar = useSelector((s) => s.avatars.listOfAvatars)
@@ -21,34 +23,6 @@ const Chat = () => {
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }
-
-  function getActualTime() {
-    const monthsArr = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December'
-    ]
-    const time = new Date()
-    let hour = time.getUTCHours()
-    let minute = time.getUTCMinutes()
-    const day = time.getUTCDate()
-    const month = monthsArr[time.getUTCMonth()]
-
-    hour = hour < 10 ? `0${hour}` : hour
-    minute = minute < 10 ? `0${minute}` : minute
-
-    const data = `${hour}:${minute}, ${day} ${month}`
-    return data
   }
 
   const onChange = (e) => {
@@ -67,10 +41,9 @@ const Chat = () => {
     }
   }, [messageText, currentUser._id, listOfChannels, currenChannelTitle])
 
-  const currentChannelId = listOfChannels?.reduce(
-    (acc, rec) => (rec.channelTitle === currenChannelTitle ? rec._id : acc),
-    ''
-  )
+  const currentChannelId = listOfChannels?.find(
+    (chan) => chan.channelTitle === currenChannelTitle
+  )._id
 
   useEffect(() => {
     dispatch(getChannel(currenChannelTitle))
@@ -105,61 +78,23 @@ const Chat = () => {
             {listOfMessages?.map((message) => {
               return (
                 <div key={message._id}>
-                  {listOfUsers?.map((user) => {
-                    return (
-                      currentChannelId === message.channelId &&
-                      user._id === message.userId && (
-                        <div key={user._id && message._id} className="flex items-start mt-4">
-                          <img
-                            src={user.avatar}
-                            alt={altOfAvatar.find((avatar) => avatar.src === user.avatar)}
-                            className="avatar"
-                          />
-                          <div className="flex flex-col">
-                            <div className="flex items-end">
-                              <span className="nickname">{user.login}</span>
-                              <span className="dataMessage">{message.messageTime}</span>
-                            </div>
-                            <p className="textMessage">
-                              <span>{message.messageText}</span>
-                            </p>
-                          </div>
-                        </div>
-                      )
-                    )
-                  })}
+                  <Messages
+                    message={message}
+                    currentChannelId={currentChannelId}
+                    altOfAvatar={altOfAvatar}
+                  />
                 </div>
               )
             })}
             {listOfMessagesFromSocket?.map((messageFromSocket) => {
               return (
                 <div key={messageFromSocket.userId && messageFromSocket.messageText}>
-                  {listOfUsers?.map((user) => {
-                    return (
-                      currentChannelId === messageFromSocket.room &&
-                      user._id === messageFromSocket.userId && (
-                        <div
-                          key={user._id && messageFromSocket.messageText}
-                          className="flex items-start mt-4"
-                        >
-                          <img
-                            src={user.avatar}
-                            alt={altOfAvatar.find((avatar) => avatar.src === user.avatar)}
-                            className="avatar"
-                          />
-                          <div className="flex flex-col">
-                            <div className="flex items-end">
-                              <span className="nickname">{user.login}</span>
-                              <span className="dataMessage">{messageFromSocket.messageTime}</span>
-                            </div>
-                            <p className="textMessage">
-                              <span ref={messagesEndRef}>{messageFromSocket.messageText}</span>
-                            </p>
-                          </div>
-                        </div>
-                      )
-                    )
-                  })}
+                  <SocketMessages
+                    messageFromSocket={messageFromSocket}
+                    currentChannelId={currentChannelId}
+                    altOfAvatar={altOfAvatar}
+                    messagesEndRef={messagesEndRef}
+                  />
                 </div>
               )
             })}
