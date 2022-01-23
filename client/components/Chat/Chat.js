@@ -43,7 +43,7 @@ const Chat = () => {
 
   const currentChannelId = listOfChannels?.find(
     (chan) => chan.channelTitle === currenChannelTitle
-  )._id
+  )?._id
 
   useEffect(() => {
     dispatch(getChannel(currenChannelTitle))
