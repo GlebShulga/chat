@@ -2,17 +2,18 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
 
-import ButtonAddChannel from './add_show_Channels/ButtonAddChannel'
-import ButtonShowChannels from './add_show_Channels/ButtonShowChannels'
-import { updateActiveChannels, userJoinToChat } from '../redux/reducers/channels'
-import closeIcon from '../assets/images/closeIcon.svg'
-import menuIcon from '../assets/images/menuIcon.svg'
+import ButtonAddChannel from '../add_show_Channels/ButtonAddChannel'
+import ButtonShowChannels from '../add_show_Channels/ButtonShowChannels'
+import Users from './Users'
+import { updateActiveChannels, userJoinToChat } from '../../redux/reducers/channels'
+import closeIcon from '../../assets/images/closeIcon.svg'
+import menuIcon from '../../assets/images/menuIcon.svg'
 
 const Sidebar = () => {
   const dispatch = useDispatch()
   const currentUser = useSelector((s) => s.auth.user)
   const listOfUsers = useSelector((s) => s.users.listOfUsers)
-  const { listOfChannels, onlineUsers } = useSelector((s) => s.channels)
+  const listOfChannels = useSelector((s) => s.channels.listOfChannels)
   const { channel: currenChannelTitle } = useParams()
 
   const [isSidebar, setIsSidebar] = useState(false)
@@ -101,18 +102,14 @@ const Sidebar = () => {
             </span>
           </div>
           {listOfUsers?.map((user) => {
+            const isUserHasSubscriptionOnCurrentChannel =
+              user.subscriptionOnChannels.indexOf(currenChannelTitle) >= 0
+
             return (
-              user.subscriptionOnChannels.indexOf(currenChannelTitle) >= 0 &&
+              isUserHasSubscriptionOnCurrentChannel &&
               user.login !== currentUser.login && (
                 <div key={user._id} className="flex items-center mb-3 px-4">
-                  <span
-                    className={
-                      onlineUsers.includes(user.login)
-                        ? 'bg-green-500 userStatusDot'
-                        : 'bg-gray-500 userStatusDot'
-                    }
-                  />
-                  <span className="text-purple-300">{user.login}</span>
+                  <Users user={user} />
                 </div>
               )
             )
